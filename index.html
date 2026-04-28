@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafiando TICs: Evaluación Oficial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; overflow-x: hidden; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-option { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .btn-option:active { transform: scale(0.95); }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .selected-option { background-color: #334155 !important; border-color: #64748b !important; }
+        .admin-table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 700px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        th { background: rgba(15, 23, 42, 0.8); color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
+
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            #admin-screen { display: block !important; position: static !important; width: 100% !important; background: white !important; }
+            .glass { background: white !important; border: 1px solid #eee !important; color: black !important; backdrop-filter: none !important; box-shadow: none !important; }
+            .no-print, button, #current-category, #progress-text, .w-full.bg-slate-800 { display: none !important; }
+            table { width: 100% !important; border: 1px solid black !important; color: black !important; font-size: 8pt; }
+            th, td { border: 1px solid black !important; color: black !important; padding: 4px; }
+            h2, p, span, h1 { color: black !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Bloqueo -->
+    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in">
+        <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
+            <div class="text-6xl mb-4">🚫</div>
+            <h2 class="text-2xl font-bold mb-2 text-white text-center">Intento Agotado</h2>
+            <p class="text-slate-400 mb-6 leading-relaxed text-center">Solo se permite un único intento por evaluación. Tus resultados ya han sido procesados y enviados al Profesor Marcelo Fernández.</p>
+        </div>
+        <button onclick="openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full text-center no-print">Acceso Docente</button>
+    </div>
+
+    <!-- Registro Inicial -->
+    <div id="start-screen" class="max-w-md w-full text-center fade-in">
+        <div class="mb-6">
+            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
+            <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 text-center">Desafiando TICs</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest text-center">Examen Final: 30 Preguntas</p>
+        </div>
+        
+        <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left">
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Nombre y Apellido del Alumno</label>
+                    <input type="text" id="student-name" placeholder="Ej: Juan Pérez" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Sin puntos)</label>
+                    <input type="number" id="student-dni" placeholder="Ej: 45123456" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Escuela</label>
+                        <select id="student-school" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                            <option value="" disabled selected>Elegir</option>
+                            <option value="4027">4027</option>
+                            <option value="4016">4016</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Curso</label>
+                        <select id="student-course" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                            <option value="" disabled selected>Elegir</option>
+                            <option value="3°1°">3°1°</option>
+                            <option value="3°4°">3°4°</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase text-center">⚠️ Debes completar todos los campos</p>
+        </div>
+
+        <button onclick="checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
+        <button onclick="openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full text-center no-print">Acceso Docente</button>
+    </div>
+
+    <!-- Juego -->
+    <div id="game-screen" class="hidden max-w-md w-full fade-in">
+        <div class="flex items-center justify-between mb-4 px-2">
+            <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase" id="current-category">Evaluación</span>
+            <span class="text-[10px] font-bold text-slate-500" id="progress-text">1 / 30</span>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
+        <div class="glass p-6 rounded-3xl mb-6 text-center min-h-[160px] flex flex-col justify-center text-center">
+            <div id="question-image" class="text-4xl mb-4 text-center">💻</div>
+            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white text-center"></h2>
+        </div>
+        <div id="options-container" class="space-y-3"></div>
+        <div id="feedback" class="hidden fixed inset-x-0 bottom-10 px-4 flex justify-center z-50">
+            <div class="py-3 px-6 rounded-2xl font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-center">Respuesta Registrada...</div>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    <div id="result-screen" class="hidden max-w-md w-full text-center fade-in">
+        <div class="glass p-8 rounded-[40px] mb-8 text-center text-center">
+            <div id="result-icon" class="text-6xl mb-4 text-center text-center">📊</div>
+            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white text-center text-center text-center"></h2>
+            <div class="text-5xl font-black text-blue-400 mb-4 text-center text-center text-center" id="final-score">0/30</div>
+            <p id="result-message" class="text-slate-400 text-sm mb-6 italic text-center text-center text-center"></p>
+            <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl text-center">
+                <div class="text-5xl mb-3 text-center">🎓</div>
+                <p class="text-white font-bold text-lg uppercase text-center">Experto en TICs e Historia</p>
+                <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase text-center">Logro Desbloqueado</p>
+            </div>
+            <div id="fail-section" class="hidden mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-2xl text-center">
+                <p class="text-red-400 font-bold text-lg uppercase text-center">No alcanzaste el mínimo</p>
+                <p class="text-[10px] text-slate-400 mt-2 text-center text-center">Mínimo: 21 aciertos (70%).</p>
+            </div>
+            <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5">
+                <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase ml-4 text-right"></p></div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs"><p class="text-slate-500 uppercase font-bold text-center">Porcentaje</p><p id="accuracy-text" class="font-bold text-blue-300 ml-4 text-right"></p></div>
+            </div>
+        </div>
+        <button onclick="openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full text-center no-print text-center">Acceso Docente</button>
+    </div>
+
+    <!-- Panel Admin -->
+    <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[95vh]">
+        <div class="flex justify-between items-center mb-6 px-4 no-print">
+            <div><h2 class="text-2xl font-bold text-white text-left">Reporte de Calificaciones</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left">Profesor Marcelo Fernández</p></div>
+            <button onclick="closeAdmin()" class="p-2 bg-slate-800 rounded-xl text-white">✖</button>
+        </div>
+        
+        <div class="hidden print:block mb-8 text-center text-center">
+            <h1 class="text-2xl font-bold uppercase text-center">Planilla TIC - Resultados Finales</h1>
+            <p class="text-center">Profesor: Marcelo Fernández | Fecha de Reporte: <span id="print-date"></span></p>
+        </div>
+
+        <div class="glass rounded-[32px] flex-1 flex flex-col overflow-hidden">
+            <div class="p-4 bg-slate-900/50 flex justify-between items-center border-b border-white/5 no-print">
+                <span class="text-xs font-bold text-slate-500" id="admin-count">0 Alumnos</span>
+                <div class="space-x-2">
+                    <button onclick="loadAdminData()" class="text-[10px] bg-blue-600 px-4 py-2 rounded-lg text-white font-bold uppercase">Actualizar</button>
+                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 px-4 py-2 rounded-lg text-white font-bold uppercase">Guardar PDF / Imprimir</button>
+                    <button onclick="downloadCSV()" class="text-[10px] bg-emerald-600 px-4 py-2 rounded-lg text-white font-bold uppercase">Excel (CSV)</button>
+                </div>
+            </div>
+            <div class="admin-table-container flex-1 overflow-y-auto p-4">
+                <table>
+                    <thead><tr><th>DNI</th><th>Esc.</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Finalización</th></tr></thead>
+                    <tbody id="results-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'desafiando-tics-final-marcelo';
+        
+        let db, auth, user = null;
+        let resultsCache = [];
+
+        const questions = [
+            { q: "¿Cómo se define el término 'Hardware'?", options: ["Programas lógicos", "Componentes físicos tangibles", "Señal Wi-Fi", "Contraseñas"], correct: 1, cat: "CONCEPTOS", img: "🔌" },
+            { q: "El 'cerebro' que procesa las instrucciones es:", options: ["Memoria RAM", "Disco Sólido", "CPU (Procesador)", "Placa Base"], correct: 2, cat: "HARDWARE", img: "🧠" },
+            { q: "¿Cuál de estos es un periférico de ENTRADA puro?", options: ["Monitor", "Impresora", "Teclado", "Parlantes"], correct: 2, cat: "HARDWARE", img: "⌨️" },
+            { q: "Para ver la salida visual de la computadora usas el:", options: ["Escáner", "Monitor", "Mouse", "Micrófono"], correct: 1, cat: "HARDWARE", img: "🖥️" },
+            { q: "Un pendrive que guarda y lee información se considera:", options: ["Entrada", "Salida", "Mixto", "Solo lectura"], correct: 2, cat: "HARDWARE", img: "🔄" },
+            { q: "El 'Software' se refiere a:", options: ["Cables internos", "Programas e instrucciones lógicas", "Pantalla de cristal", "Carcasa"], correct: 1, cat: "CONCEPTOS", img: "📀" },
+            { q: "Función principal de un Sistema Operativo:", options: ["Solo para juegos", "Administrar hardware y recursos", "Limpiar el equipo", "Ahorrar energía"], correct: 1, cat: "SISTEMAS", img: "⚙️" },
+            { q: "WhatsApp y Spotify son ejemplos de:", options: ["Sistemas Operativos", "Software de Aplicación", "Hardware interno", "Controladores"], correct: 1, cat: "SOFTWARE", img: "📱" },
+            { q: "¿Qué son los 'Datos' en informática?", options: ["Información sin procesar", "Teclas rotas", "Tiempo de navegación", "La marca de la PC"], correct: 0, cat: "TIC", img: "📊" },
+            { q: "El rol del Usuario en el sistema informático es:", options: ["Sustituir a la CPU", "Dar propósito y órdenes", "Solo pagar la luz", "Limpiar circuitos"], correct: 1, cat: "HUMANWARE", img: "👤" },
+            { q: "¿Qué civilizaciones antiguas son mencionadas como usuarias del ábaco?", options: ["Mayas", "Chinos, Griegos y Romanos", "Vikingos", "Incas"], correct: 1, cat: "HISTORIA", img: "🏛️" },
+            { q: "Contribución de Al-Juarismi clave para la programación:", options: ["El mouse", "Concepto de Algoritmo", "La pantalla", "ENIAC"], correct: 1, cat: "HISTORIA", img: "🕌" },
+            { q: "¿Diferencia del 'Step Reckoner' de Leibniz respecto a la Pascalina?", options: ["Solo sumaba", "Podía multiplicar y dividir", "Era eléctrica", "Usaba vapor"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "¿Por qué el Telar de Jacquard es un antecedente clave?", options: ["Internet", "Tarjetas perforadas", "Portátil", "Funcionaba con gas"], correct: 1, cat: "HISTORIA", img: "🧵" },
+            { q: "En la Máquina Analítica, el 'almacén' representaba:", options: ["El Procesador", "La Memoria", "La Impresora", "La Pantalla"], correct: 1, cat: "HISTORIA", img: "🧠" },
+            { q: "Visión de Ada Lovelace sobre máquinas de cálculo:", options: ["Solo números", "Cualquier símbolo (música, arte)", "Para jugar", "No funcionarían"], correct: 1, cat: "HISTORIA", img: "👩‍💻" },
+            { q: "Operadores introducidos por George Boole:", options: ["+, -, *", "AND, OR, NOT", "IF, ELSE", "X, Y"], correct: 1, cat: "LOGICA", img: "💡" },
+            { q: "Hito histórico de Claude Shannon en 1937:", options: ["Google", "Lógica booleana en circuitos", "Wi-Fi", "Satélite"], correct: 1, cat: "HISTORIA", img: "🧠" },
+            { q: "Impacto de la máquina de Hollerith en 1890:", options: ["Atrasó el censo", "Redujo tiempo de años a meses", "No funcionó", "Fue manual"], correct: 1, cat: "HISTORIA", img: "📑" },
+            { q: "¿Qué define conceptualmente a la 'Máquina de Turing'?", options: ["Motor de vapor", "Modelo matemático universal", "Máquina de escribir", "Ábaco"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "Propósito de la computadora Colossus (1943):", options: ["Hacer censos", "Descifrar códigos de guerra", "Hacer películas", "Vender"], correct: 1, cat: "HISTORIA", img: "🕵️" },
+            { q: "¿Por qué ENIAC es distinta a la Colossus?", options: ["Más pequeña", "Programable y de uso general", "Sin luz", "Para juegos"], correct: 1, cat: "HISTORIA", img: "🏢" },
+            { q: "Velocidad de procesamiento de la ENIAC:", options: ["1 suma/hora", "5.000 sumas por segundo", "1 GHz", "Como un celular"], correct: 1, cat: "HISTORIA", img: "⚡" },
+            { q: "Desventaja de los tubos de vacío de la 1ra Gen:", options: ["Baratos", "Calor excesivo y fallas", "Invisibles", "Bajo consumo"], correct: 1, cat: "HISTORIA", img: "🔥" },
+            { q: "Hito de hardware de la 2da Generación:", options: ["Válvulas", "Transistor", "Chips", "IA"], correct: 1, cat: "GENERACIONES", img: "📻" },
+            { q: "¿Qué hito marca el inicio de la 3ra Generación?", options: ["Microprocesadores", "Chips (Circuitos Integrados)", "Cables", "Vapor"], correct: 1, cat: "GENERACIONES", img: "🔳" },
+            { q: "La 4ta Generación nace con la invención del:", options: ["Transistor", "Microprocesador", "Ábaco", "Luz LED"], correct: 1, cat: "GENERACIONES", img: "📦" },
+            { q: "Característica de la 5ta Generación e IA:", options: ["Máquinas gigantes", "Procesamiento Paralelo e IA", "Texto verde", "Mecánica"], correct: 1, cat: "IA", img: "🤖" },
+            { q: "¿Qué usaba Leibniz en su 'Step Reckoner'?", options: ["Luz", "Ruedas dentadas", "IA", "Chips"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "Primer computadora comercial de uso general:", options: ["ENIAC", "UNIVAC I", "Macintosh", "IBM PC"], correct: 1, cat: "HISTORIA", img: "🏢" }
+        ];
+
+        let studentName, studentDni, studentSchool, studentCourse;
+        let currentQuestionIndex = 0, score = 0, canAnswer = true;
+
+        const init = async () => {
+            if (!firebaseConfig.apiKey) return;
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            try { await signInAnonymously(auth); } catch(e) {}
+            
+            onAuthStateChanged(auth, (u) => {
+                user = u;
+                if (user && localStorage.getItem('examen_tics_marcelo_id')) {
+                    document.getElementById('start-screen').classList.add('hidden');
+                    document.getElementById('already-done-screen').classList.remove('hidden');
+                }
+            });
+            document.getElementById('print-date').innerText = new Date().toLocaleDateString();
+        };
+
+        init();
+
+        window.checkDataAndStart = function() {
+            const name = document.getElementById('student-name').value.trim();
+            const dni = document.getElementById('student-dni').value.trim();
+            const school = document.getElementById('student-school').value;
+            const course = document.getElementById('student-course').value;
+            
+            if (name.length < 5 || dni.length < 6 || !school || !course) {
+                document.getElementById('error-msg').classList.remove('hidden');
+                return;
+            }
+            
+            studentName = name; studentDni = dni; studentSchool = school; studentCourse = course;
+            localStorage.setItem('examen_tics_marcelo_id', 'true');
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            showQuestion();
+        };
+
+        function showQuestion() {
+            const q = questions[currentQuestionIndex];
+            const container = document.getElementById('options-container');
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('question-image').innerText = q.img;
+            document.getElementById('current-category').innerText = q.cat;
+            document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / 30`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / 30) * 100}%`;
+            
+            container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option w-full p-4 glass rounded-2xl text-left text-sm hover:bg-white/10 flex items-center border border-white/5';
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center mr-3 text-xs font-bold text-slate-400 shrink-0 border border-white/10 text-center">${String.fromCharCode(65 + idx)}</span><span class="text-slate-100">${opt}</span>`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+            canAnswer = true;
+        }
+
+        function checkAnswer(idx, btn) {
+            if (!canAnswer) return;
+            canAnswer = false;
+            btn.classList.add('selected-option');
+            if (idx === questions[currentQuestionIndex].correct) score++;
+            document.getElementById('feedback').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('feedback').classList.add('hidden');
+                currentQuestionIndex++;
+                if (currentQuestionIndex < 30) showQuestion();
+                else saveAndShowResults();
+            }, 600);
+        }
+
+        async function saveAndShowResults() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            const acc = Math.round((score / 30) * 100);
+            document.getElementById('final-score').innerText = `${score} / 30`;
+            document.getElementById('accuracy-text').innerText = `${acc}%`;
+            document.getElementById('final-name').innerText = studentName;
+            
+            if (score >= 21) { 
+                document.getElementById('result-title').innerText = "¡Aprobado!";
+                document.getElementById('result-message').innerText = `¡Excelente trabajo ${studentName}!`;
+                document.getElementById('prize-section').classList.remove('hidden');
+            } else {
+                document.getElementById('result-title').innerText = "Desaprobado";
+                document.getElementById('result-message').innerText = `No alcanzaste el mínimo requerido.`;
+                document.getElementById('fail-section').classList.remove('hidden');
+            }
+
+            if (user) {
+                try {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
+                        nombre: studentName, 
+                        dni: String(studentDni), 
+                        escuela: studentSchool, 
+                        curso: studentCourse, 
+                        aciertos: score, 
+                        total: 30, 
+                        porcentaje: acc, 
+                        fecha: new Date().toLocaleString()
+                    });
+                } catch(e) {}
+            }
+        }
+
+        window.openAdmin = function() {
+            const p = prompt("Clave Profesor:");
+            if (p === "marcelo2024") {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.add('hidden');
+                document.getElementById('already-done-screen').classList.add('hidden');
+                document.getElementById('admin-screen').classList.remove('hidden');
+                loadAdminData();
+            } else alert("Error");
+        };
+
+        window.closeAdmin = () => { 
+            document.getElementById('admin-screen').classList.add('hidden'); 
+            if (localStorage.getItem('examen_tics_marcelo_id')) document.getElementById('already-done-screen').classList.remove('hidden');
+            else document.getElementById('start-screen').classList.remove('hidden');
+        };
+
+        window.loadAdminData = async function() {
+            const body = document.getElementById('results-body');
+            body.innerHTML = '<tr><td colspan="7" class="text-center py-8">Conectando con la base de datos...</td></tr>';
+            try {
+                if (!user) await signInAnonymously(auth);
+                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
+                resultsCache = [];
+                snap.forEach(d => resultsCache.push(d.data()));
+                resultsCache.sort((a, b) => String(a.dni).localeCompare(String(b.dni)));
+                document.getElementById('admin-count').innerText = `${resultsCache.length} Alumnos`;
+                body.innerHTML = '';
+                resultsCache.forEach(r => {
+                    const tr = document.createElement('tr');
+                    const ap = r.aciertos >= 21;
+                    const displayFullDate = r.fecha || '-';
+                    tr.innerHTML = `<td class="font-bold text-blue-400">${r.dni}</td><td class="text-slate-300">${r.escuela}</td><td class="text-slate-300">${r.curso || '-'}</td><td class="text-white font-semibold">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold">${r.aciertos} / 30</td><td class="text-slate-400">${r.porcentaje}%</td><td class="text-[9px] text-slate-500">${displayFullDate}</td>`;
+                    body.appendChild(tr);
+                });
+            } catch(e) { body.innerHTML = '<tr><td colspan="7" class="text-center text-red-500 py-8">Error de conexión. Ejecuta desde el servidor (GitHub o Preview).</td></tr>'; }
+        };
+
+        window.downloadCSV = function() {
+            if (resultsCache.length === 0) return;
+            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Fecha y Hora\n";
+            resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.fecha}\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Resultados_TIC_Completo.csv');
+            a.click();
+        };
+    </script>
+</body>
+</html>
