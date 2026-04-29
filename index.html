@@ -34,8 +34,8 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
     <!-- Pantalla de Bloqueo -->
-    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in text-center">
-        <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30 text-center">
+    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in">
+        <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
             <div class="text-6xl mb-4 text-center">🚫</div>
             <h2 class="text-2xl font-bold mb-2 text-white">Intento Agotado</h2>
             <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento por evaluación. Tus respuestas ya fueron enviadas al sistema del Profesor Marcelo Fernández.</p>
@@ -45,10 +45,10 @@
 
     <!-- Registro Inicial -->
     <div id="start-screen" class="max-w-md w-full text-center fade-in">
-        <div class="mb-6 text-center">
+        <div class="mb-6">
             <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
-            <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 text-center text-center">Desafiando TICs</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center text-center">Examen Final de Informática • 30 Preguntas</p>
+            <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 text-center">Desafiando TICs</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center">Examen Final de Informática • 30 Preguntas</p>
         </div>
         
         <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left border-white/5">
@@ -71,7 +71,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center text-center">Curso</label>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center">Curso</label>
                         <select id="student-course" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm cursor-pointer">
                             <option value="" disabled selected>Elegir</option>
                             <option value="3°1°">3°1°</option>
@@ -84,7 +84,7 @@
         </div>
 
         <button onclick="checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
-        <button onclick="openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center text-center text-center">Acceso Docente</button>
+        <button onclick="openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center">Acceso Docente</button>
     </div>
 
     <!-- Juego -->
@@ -96,11 +96,11 @@
         <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
         <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[180px] text-center border-white/10 shadow-2xl">
             <div id="question-image" class="text-4xl mb-4 text-center">💻</div>
-            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white px-2 text-center text-center"></h2>
+            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white px-2 text-center"></h2>
         </div>
         <div id="options-container" class="space-y-3"></div>
         <div id="feedback" class="hidden fixed inset-x-0 bottom-10 px-4 flex justify-center z-50">
-            <div class="py-3 px-8 rounded-full font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-sm text-center text-center">Respuesta Registrada...</div>
+            <div class="py-3 px-8 rounded-full font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-sm text-center">Respuesta Registrada...</div>
         </div>
     </div>
 
@@ -113,45 +113,45 @@
             <p id="result-message" class="text-slate-400 text-sm mb-6 italic px-4 text-center"></p>
             <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-3xl text-center">
                 <div class="text-5xl mb-3 text-center">🎓</div>
-                <p class="text-white font-bold text-lg uppercase text-center text-center">Experto en TICs</p>
+                <p class="text-white font-bold text-lg uppercase text-center">Experto en TICs</p>
                 <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase tracking-widest text-center">Evaluación Finalizada</p>
             </div>
             <div id="fail-section" class="hidden mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-3xl text-center">
                 <p class="text-red-400 font-bold text-lg uppercase text-center">No alcanzaste el mínimo</p>
-                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center text-center">Se requiere un 70% (21 aciertos) para aprobar.</p>
+                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center">Se requiere un 70% (21 aciertos) para aprobar.</p>
             </div>
             <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5 text-center">
                 <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
-                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs"><p class="text-slate-500 uppercase font-bold text-center text-center">Porcentaje</p><p id="accuracy-text" class="font-bold text-blue-300 ml-4 text-right"></p></div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs text-center"><p class="text-slate-500 uppercase font-bold text-center">Porcentaje</p><p id="accuracy-text" class="font-bold text-blue-300 ml-4 text-right"></p></div>
             </div>
         </div>
-        <button onclick="openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center text-center">Acceso Docente</button>
+        <button onclick="openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center">Acceso Docente</button>
     </div>
 
     <!-- Panel Docente -->
     <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[92vh]">
-        <div class="flex justify-between items-center mb-6 px-4 no-print text-center text-center">
+        <div class="flex justify-between items-center mb-6 px-4 no-print text-center">
             <div><h2 class="text-2xl font-bold text-white text-left text-left">Reporte de Calificaciones</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left text-left text-left">Profesor Marcelo Fernández • 2026</p></div>
             <button onclick="closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors">✖</button>
         </div>
         
-        <div class="hidden print:block mb-10 text-center text-center">
-            <h1 class="text-2xl font-bold uppercase border-b-2 border-black pb-4 mb-2 text-center text-center">PLANILLA DE RESULTADOS - INFORMÁTICA</h1>
+        <div class="hidden print:block mb-10 text-center">
+            <h1 class="text-2xl font-bold uppercase border-b-2 border-black pb-4 mb-2 text-center">PLANILLA DE RESULTADOS - INFORMÁTICA</h1>
             <p class="text-center"><b>Docente:</b> Marcelo Fernández | <b>Fecha de Reporte:</b> <span id="print-date"></span></p>
         </div>
 
-        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center text-center">
+        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center">
             <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center">
-                <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5 text-center text-center" id="admin-count">0 Alumnos Registrados</span>
-                <div class="flex gap-2 text-center text-center">
+                <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5 text-center" id="admin-count">0 Alumnos Registrados</span>
+                <div class="flex gap-2 text-center">
                     <button onclick="loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Actualizar</button>
                     <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all text-center">Imprimir Reporte (PDF)</button>
                     <button onclick="downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Excel (CSV)</button>
                 </div>
             </div>
             <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
-                <table id="results-table" class="text-center text-center">
-                    <thead><tr><th>DNI</th><th>Esc.</th><th>Cur.</th><th>Alumno</th><th>Nota</th><th>%</th><th>Finalización (Fecha y Hora)</th></tr></thead>
+                <table id="results-table" class="text-center">
+                    <thead><tr><th>DNI</th><th>Esc.</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Finalización</th></tr></thead>
                     <tbody id="results-body"></tbody>
                 </table>
             </div>
@@ -163,7 +163,7 @@
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // CONFIGURACIÓN DE FIREBASE (Verificada en tus capturas)
+        // CONFIGURACIÓN DE FIREBASE
         const myFirebaseConfig = {
             apiKey: "AIzaSyAI-r_ZLjbx2jnVgfi4-HHBnOfDEvOOcfw",
             authDomain: "club-cc6a8.firebaseapp.com",
@@ -176,13 +176,25 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : myFirebaseConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'tics-eval-marcelo-2026';
         
-        let db, auth, user = null;
+        // Inicialización de Variables de Estado
+        let studentName = "";
+        let studentDni = "";
+        let studentSchool = "";
+        let studentCourse = "";
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let canAnswer = true;
         let resultsCache = [];
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let user = null;
 
         const questions = [
             { q: "¿Qué civilizaciones antiguas usaron el ábaco para cálculos?", options: ["Solo Mayas", "Chinos, Griegos y Romanos", "Solo Incas", "Vikingos"], correct: 1, cat: "HISTORIA", img: "🏛️" },
             { q: "¿Cuál es la contribución principal de Al-Juarismi?", options: ["El mouse", "Concepto de Algoritmo", "La pantalla", "El chip"], correct: 1, cat: "HISTORIA", img: "🕌" },
-            { q: "La Pascalina sumaba y restaba, ¿qué hacía el 'Step Reckoner' de Leibniz?", options: ["Era totalmente eléctrica", "Multiplicaba y dividía", "Usaba vapor", "Tenía teclado"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "La Pascalina solo sumaba, ¿qué hacía el 'Step Reckoner' de Leibniz?", options: ["Era totalmente eléctrica", "Multiplicaba y dividía", "Usaba vapor", "Tenía teclado"], correct: 1, cat: "HISTORIA", img: "⚙️" },
             { q: "¿Por qué el Telar de Jacquard es un antecedente clave?", options: ["Por el internet", "Usaba tarjetas perforadas", "Era portátil", "Tenía CPU"], correct: 1, cat: "HISTORIA", img: "🧵" },
             { q: "En la Máquina Analítica de Babbage, el 'almacén' representaba:", options: ["El procesador", "La memoria", "La impresora", "El teclado"], correct: 1, cat: "HISTORIA", img: "🧠" },
             { q: "¿Cuál fue la visión innovadora de Ada Lovelace?", options: ["Vender computadoras", "Procesar cualquier símbolo (música, arte)", "Crear redes sociales", "Inventar la batería"], correct: 1, cat: "HISTORIA", img: "👩‍💻" },
@@ -214,9 +226,6 @@
 
         const init = async () => {
             try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
                 await signInAnonymously(auth);
             } catch(e) { console.error("Error de inicialización"); }
             
@@ -233,15 +242,22 @@
         init();
 
         window.checkDataAndStart = function() {
-            const name = document.getElementById('student-name').value.trim();
-            const dni = document.getElementById('student-dni').value.trim();
-            const school = document.getElementById('student-school').value;
-            const course = document.getElementById('student-course').value;
-            if (name.length < 5 || dni.length < 6 || !school || !course) {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const dniInput = document.getElementById('student-dni').value.trim();
+            const schoolInput = document.getElementById('student-school').value;
+            const courseInput = document.getElementById('student-course').value;
+
+            if (nameInput.length < 5 || dniInput.length < 6 || !schoolInput || !courseInput) {
                 document.getElementById('error-msg').classList.remove('hidden');
                 return;
             }
-            studentName = name; studentDni = dni; studentSchool = school; studentCourse = course;
+
+            // Asignación correcta a variables de estado
+            studentName = nameInput;
+            studentDni = dniInput;
+            studentSchool = schoolInput;
+            studentCourse = courseInput;
+
             localStorage.setItem('examen_tics_marcelo_id', 'true');
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
@@ -316,7 +332,7 @@
             } else if (p !== null) alert("Error de clave");
         };
 
-        window.closeAdmin = () => { 
+        window.closeAdmin = function() { 
             document.getElementById('admin-screen').classList.add('hidden'); 
             document.getElementById('start-screen').classList.remove('hidden');
         };
