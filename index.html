@@ -33,12 +33,12 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Pantalla de Bloqueo -->
-    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in text-center">
-        <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30 text-center text-center text-center">
+    <!-- Pantalla de Bloqueo por Intento Único -->
+    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in">
+        <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
             <div class="text-6xl mb-4 text-center">🚫</div>
             <h2 class="text-2xl font-bold mb-2 text-white">Intento Agotado</h2>
-            <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento por evaluación. Tus respuestas ya fueron enviadas al Profesor Marcelo Fernández.</p>
+            <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento por evaluación. Tus respuestas ya fueron enviadas al sistema del Profesor Marcelo Fernández.</p>
         </div>
         <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
@@ -46,33 +46,33 @@
     <!-- Registro Inicial -->
     <div id="start-screen" class="max-w-md w-full text-center fade-in">
         <div class="mb-6">
-            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center text-center">Prof. Marcelo Fernández</p>
+            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
             <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 text-center">Desafiando TICs</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center text-center text-center">Examen: examen-tic • 30 Preguntas</p>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center">Examen Final: examen-tic • 30 Preguntas</p>
         </div>
         
         <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left border-white/5">
             <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 text-center">Nombre y Apellido del Alumno</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Nombre y Apellido del Alumno</label>
                     <input type="text" id="student-name-input" placeholder="Ej: Juan Pérez" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 text-center">DNI (Sin puntos)</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Sin puntos)</label>
                     <input type="number" id="student-dni-input" placeholder="Ej: 45123456" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center text-center">Escuela</label>
-                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm cursor-pointer">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center">Escuela</label>
+                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                             <option value="" disabled selected>Elegir</option>
                             <option value="4027">4027</option>
                             <option value="4016">4016</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center text-center">Curso</label>
-                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm cursor-pointer">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center">Curso</label>
+                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                             <option value="" disabled selected>Elegir</option>
                             <option value="3°1°">3°1°</option>
                             <option value="3°4°">3°4°</option>
@@ -80,79 +80,74 @@
                     </div>
                 </div>
             </div>
-            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase text-center">⚠️ Completa todos los datos para iniciar</p>
+            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase">⚠️ Completa todos los datos para iniciar</p>
         </div>
 
-        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm text-center text-center">Iniciar Evaluación</button>
-        <button onclick="window.openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center text-center">Acceso Docente</button>
+        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
+        <button onclick="window.openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center">Acceso Docente</button>
     </div>
 
     <!-- Pantalla de Juego -->
     <div id="game-screen" class="hidden max-w-md w-full fade-in">
-        <div class="flex items-center justify-between mb-4 px-2 text-center text-center">
-            <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase text-center text-center" id="current-category">Evaluación</span>
-            <span class="text-[10px] font-bold text-slate-500 text-center text-center text-center" id="progress-text">1 / 15</span>
+        <div class="flex items-center justify-between mb-4 px-2">
+            <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase text-center" id="current-category">Evaluación</span>
+            <span class="text-[10px] font-bold text-slate-500 text-center" id="progress-text">1 / 30</span>
         </div>
-        <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0 text-center"></div></div>
-        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[180px] text-center border-white/10 shadow-2xl text-center text-center">
-            <div id="question-image" class="text-4xl mb-4 text-center text-center text-center">💻</div>
-            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white px-2 text-center text-center"></h2>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
+        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[180px] text-center border-white/10 shadow-2xl">
+            <div id="question-image" class="text-4xl mb-4 text-center">💻</div>
+            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white px-2 text-center"></h2>
         </div>
         <div id="options-container" class="space-y-3"></div>
-        <div id="feedback" class="hidden fixed inset-x-0 bottom-10 px-4 flex justify-center z-50 text-center">
-            <div class="py-3 px-8 rounded-full font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-sm text-center">Respuesta Registrada...</div>
+        <div id="feedback" class="hidden fixed inset-x-0 bottom-10 px-4 flex justify-center z-50">
+            <div class="py-3 px-8 rounded-full font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-sm text-center">Sincronizando con Cloud Firestore...</div>
         </div>
     </div>
 
-    <!-- Pantalla de Resultados -->
+    <!-- Resultados -->
     <div id="result-screen" class="hidden max-w-md w-full text-center fade-in">
-        <div class="glass p-8 rounded-[40px] mb-8 shadow-2xl border-white/5 text-center text-center">
+        <div class="glass p-8 rounded-[40px] mb-8 shadow-2xl border-white/5 text-center">
             <div id="result-icon" class="text-6xl mb-4 text-center">📊</div>
-            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white text-center"></h2>
-            <div class="text-5xl font-black text-blue-400 mb-4 text-center" id="final-score">0/15</div>
-            <p id="result-message" class="text-slate-400 text-sm mb-6 italic px-4 text-center text-center"></p>
-            <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-3xl text-center text-center">
+            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white"></h2>
+            <div class="text-5xl font-black text-blue-400 mb-4 text-center" id="final-score">0/30</div>
+            <p id="result-message" class="text-slate-400 text-sm mb-6 italic px-4 text-center"></p>
+            <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-3xl text-center">
                 <div class="text-5xl mb-3 text-center">🎓</div>
-                <p class="text-white font-bold text-lg uppercase text-center text-center">Experto en TICs</p>
-                <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase tracking-widest text-center text-center">Sincronizado con Cloud Firestore</p>
+                <p class="text-white font-bold text-lg uppercase">Experto en TICs</p>
+                <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase tracking-widest text-center">Nota Guardada Correctamente</p>
             </div>
             <div id="fail-section" class="hidden mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-3xl text-center">
                 <p class="text-red-400 font-bold text-lg uppercase text-center">No alcanzaste el mínimo</p>
-                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center text-center text-center">Se requiere un 70% para aprobar.</p>
+                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center">Se requiere un 70% para aprobar.</p>
             </div>
-            <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5 text-center">
-                <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
-                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs text-center"><p class="text-slate-500 uppercase font-bold text-center text-center">Porcentaje</p><p id="accuracy-text" class="font-bold text-blue-300 ml-4 text-right"></p></div>
+            <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5">
+                <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs"><p class="text-slate-500 uppercase font-bold text-center">Precisión</p><p id="accuracy-text" class="font-bold text-blue-300 ml-4 text-right"></p></div>
             </div>
         </div>
-        <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center text-center">Acceso Docente</button>
+        <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center">Acceso Docente</button>
     </div>
 
     <!-- Panel Docente -->
-    <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[92vh]">
-        <div class="flex justify-between items-center mb-6 px-4 no-print text-center text-center">
-            <div><h2 class="text-2xl font-bold text-white text-left text-left text-left">Reporte de Calificaciones</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left text-left text-left text-left">Profesor Marcelo Fernández • 2026</p></div>
-            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors text-center text-center text-center">✖</button>
+    <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[95vh]">
+        <div class="flex justify-between items-center mb-6 px-4 no-print text-center">
+            <div><h2 class="text-2xl font-bold text-white text-left">Reporte de Calificaciones</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left">Profesor Marcelo Fernández • 2026</p></div>
+            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors">✖</button>
         </div>
         
-        <div class="hidden print:block mb-10 text-center text-center text-center text-center">
-            <h1 class="text-2xl font-bold uppercase border-b-2 border-black pb-4 mb-2 text-center text-center text-center">PLANILLA DE RESULTADOS - examen-tic</h1>
-            <p class="text-center text-center text-center"><b>Docente:</b> Marcelo Fernández | <b>Fecha:</b> <span id="print-date"></span></p>
-        </div>
-
-        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center text-center text-center text-center">
-            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center text-center">
-                <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5 text-center text-center" id="admin-count">Sincronizando...</span>
-                <div class="flex gap-2 text-center text-center text-center">
-                    <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all text-center">Actualizar Lista</button>
-                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all text-center">Imprimir PDF</button>
-                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all text-center">Excel (CSV)</button>
+        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center">
+            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center">
+                <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5 text-center" id="admin-count">0 Alumnos Registrados</span>
+                <div class="flex gap-2">
+                    <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Sincronizar Datos</button>
+                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir Reporte</button>
+                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Excel (CSV)</button>
                 </div>
             </div>
-            <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center text-center text-center">
-                <table id="results-table" class="text-center text-center text-center">
+            <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
+                <table id="results-table" class="text-center">
                     <thead><tr><th>DNI</th><th>Escuela</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Fecha</th></tr></thead>
-                    <tbody id="results-body" class="text-center text-center"></tbody>
+                    <tbody id="results-body"></tbody>
                 </table>
             </div>
         </div>
@@ -163,7 +158,7 @@
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // CONFIGURACIÓN FIJA PARA GITHUB (Sustituye la búsqueda de variables internas)
+        // CONFIGURACIÓN DE TU PROYECTO club-cc6a8
         const firebaseConfig = {
             apiKey: "AIzaSyAI-r_ZLjbx2jnVgfi4-HHBnOfDEvOOcfw",
             authDomain: "club-cc6a8.firebaseapp.com",
@@ -173,58 +168,57 @@
             appId: "1:754977085906:web:c070776aac822175c2100b"
         };
 
-        const appId = 'examen-tic-eval-2026';
+        const appId = 'tics-eval-marcelo-2026';
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Estado Global del Examen
+        // Estado del Examen
         window.examState = {
-            sName: "",
-            sDni: "",
-            sSchool: "",
-            sCourse: "",
-            currentQuestionIndex: 0,
-            score: 0,
-            canAnswer: true,
-            resultsCache: [],
-            user: null
+            sName: "", sDni: "", sSchool: "", sCourse: "",
+            score: 0, currentIdx: 0, canAnswer: true, user: null
         };
 
         const questions = [
-            { q: "¿Cómo se define el término 'Hardware'?", options: ["Programas y apps", "Componentes físicos y tangibles", "Datos en la nube", "Conexión a internet"], correct: 1, cat: "HARDWARE", img: "🔌" },
-            { q: "Se le considera el 'cerebro' de la computadora:", options: ["Memoria RAM", "Disco Duro", "CPU (Procesador)", "Tarjeta de Video"], correct: 2, cat: "HARDWARE", img: "🧠" },
-            { q: "¿Cuál es un periférico de ENTRADA puro?", options: ["Monitor", "Teclado", "Impresora", "Parlantes"], correct: 1, cat: "HARDWARE", img: "⌨️" },
-            { q: "Para ver la salida visual usas el:", options: ["Escáner", "Monitor", "Mouse", "Micrófono"], correct: 1, cat: "HARDWARE", img: "🖥️" },
-            { q: "Un pendrive que guarda y lee información se considera:", options: ["Entrada", "Salida", "Mixto", "Solo lectura"], correct: 2, cat: "HARDWARE", img: "🔄" },
-            { q: "El 'Software' se refiere a:", options: ["Cables", "Programas e instrucciones lógicas", "Carcasa", "Pantalla"], correct: 1, cat: "CONCEPTOS", img: "📀" },
-            { q: "WhatsApp y Spotify son ejemplos de:", options: ["Sistemas Operativos", "Software de Aplicación", "Hardware", "Periféricos"], correct: 1, cat: "SOFTWARE", img: "📱" },
-            { q: "¿Qué son los 'Datos' en informática?", options: ["Información sin procesar", "Teclas", "Cables", "Marca de PC"], correct: 0, cat: "TIC", img: "📊" },
-            { q: "El rol del Usuario es:", options: ["Pagar el servicio", "Dar propósito y órdenes", "Limpiar", "Sustituir CPU"], correct: 1, cat: "HUMANWARE", img: "👤" },
-            { q: "Primer computadora comercial de uso general:", options: ["ENIAC", "UNIVAC I", "Macintosh", "IBM PC"], correct: 1, cat: "HISTORIA", img: "🏢" },
-            { q: "Un microprocesador moderno contiene:", options: ["Una válvula de vacío", "Millones de transistores en un chip", "Una pascalina miniatura", "Cables"], correct: 1, cat: "HARDWARE", img: "🔳" },
-            { q: "¿Qué pasa si hay Hardware pero no Software?", options: ["Es veloz", "Son piezas inútiles", "Limpia solo", "Usa IA"], correct: 1, cat: "SISTEMA", img: "🚫" },
-            { q: "La memoria RAM se diferencia del Disco Duro porque:", options: ["Es más barata", "Es volátil (se borra al apagar)", "Guarda más datos", "Es de metal"], correct: 1, cat: "HARDWARE", img: "⚡" },
-            { q: "Un ejemplo de Software de SISTEMA es:", options: ["Facebook", "Windows 11", "Excel", "Candy Crush"], correct: 1, cat: "SOFTWARE", img: "🖥️" },
-            { q: "La 'Pascalina' fue inventada por:", options: ["Steve Jobs", "Blaise Pascal", "Bill Gates", "Ada Lovelace"], correct: 1, cat: "HISTORIA", img: "⚙️" }
+            { q: "¿Qué civilizaciones antiguas usaron el ábaco?", options: ["Solo Mayas", "Chinos, Griegos y Romanos", "Solo Incas", "Vikingos"], correct: 1, cat: "HISTORIA", img: "🏛️" },
+            { q: "Contribución de Al-Juarismi:", options: ["El mouse", "Concepto de Algoritmo", "La pantalla", "El chip"], correct: 1, cat: "HISTORIA", img: "🕌" },
+            { q: "La Pascalina sumaba, ¿qué hacía el 'Step Reckoner'?", options: ["Nada más", "Multiplicaba y dividía", "Usaba vapor", "Tenía teclado"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "¿Por qué el Telar de Jacquard es clave?", options: ["Internet", "Tarjetas perforadas", "Portátil", "Tenía CPU"], correct: 1, cat: "HISTORIA", img: "🧵" },
+            { q: "En la Máquina Analítica, el 'almacén' era:", options: ["El procesador", "La memoria", "La impresora", "El teclado"], correct: 1, cat: "HISTORIA", img: "🧠" },
+            { q: "Visión de Ada Lovelace:", options: ["Vender PC", "Procesar música y arte", "Redes sociales", "IA"], correct: 1, cat: "HISTORIA", img: "👩‍💻" },
+            { q: "Operadores de George Boole:", options: ["+, -, *", "AND, OR, NOT", "IF, ELSE", "Logaritmos"], correct: 1, cat: "LÓGICA", img: "💡" },
+            { q: "Hito de Claude Shannon en 1937:", options: ["Google", "Lógica booleana en circuitos", "Wi-Fi", "Windows"], correct: 1, cat: "HISTORIA", img: "🧠" },
+            { q: "Impacto de Hollerith en 1890:", options: ["Atrasó el censo", "Redujo años a meses", "No funcionó", "Fue manual"], correct: 1, cat: "HISTORIA", img: "📑" },
+            { q: "¿Qué define a la 'Máquina de Turing'?", options: ["Vapor", "Modelo matemático universal", "Escritura", "Reloj"], correct: 1, cat: "HISTORIA", img: "⚙️" },
+            { q: "Propósito de Colossus (1943):", options: ["Censos", "Descifrar códigos de guerra", "Jugar", "Navegar"], correct: 1, cat: "HISTORIA", img: "🕵️" },
+            { q: "¿Por qué ENIAC es distinta a Colossus?", options: ["Pequeña", "Programable y general", "A batería", "Lenta"], correct: 1, cat: "HISTORIA", img: "🏢" },
+            { q: "Velocidad de la ENIAC:", options: ["1 suma/hora", "5.000 sumas/segundo", "1 MHz", "1 GHz"], correct: 1, cat: "HISTORIA", img: "⚡" },
+            { q: "Desventaja de tubos de vacío:", options: ["Baratos", "Calor y fallas", "Invisibles", "Bajo consumo"], correct: 1, cat: "HISTORIA", img: "🔥" },
+            { q: "¿Qué componente moderno procesa datos?", options: ["Monitor", "CPU", "Teclado", "Mouse"], correct: 1, cat: "HARDWARE", img: "🧠" },
+            { q: "¿Cómo se define el 'Hardware'?", options: ["Programas", "Componentes físicos y tangibles", "Wi-Fi", "Datos"], correct: 1, cat: "CONCEPTOS", img: "🔌" },
+            { q: "¿Cuál es un periférico de ENTRADA?", options: ["Monitor", "Teclado", "Impresora", "Parlantes"], correct: 1, cat: "HARDWARE", img: "⌨️" },
+            { q: "Para ver salida visual usas el:", options: ["Escáner", "Monitor", "Mouse", "Micrófono"], correct: 1, cat: "HARDWARE", img: "🖥️" },
+            { q: "Un pendrive que guarda y lee es:", options: ["Entrada", "Salida", "Mixto", "Procesador"], correct: 2, cat: "HARDWARE", img: "🔄" },
+            { q: "El 'Software' se refiere a:", options: ["Cables", "Programas e instrucciones", "Carcasa", "Pantalla"], correct: 1, cat: "CONCEPTOS", img: "📀" },
+            { q: "Hito de la 2da Generación:", options: ["Válvulas", "Transistor", "Chips", "IA"], correct: 1, cat: "GENERACIONES", img: "📻" },
+            { q: "Inicio de la 3ra Generación:", options: ["Transistor", "Chips (Circuitos Integrados)", "Vapor", "Luz"], correct: 1, cat: "GENERACIONES", img: "🔳" },
+            { q: "La 4ta Generación nace con el:", options: ["Ábaco", "Microprocesador", "Telar", "Relé"], correct: 1, cat: "GENERACIONES", img: "📦" },
+            { q: "Característica de la 5ta Generación:", options: ["Gigantes", "IA", "Manuales", "Mecánicas"], correct: 1, cat: "IA", img: "🤖" },
+            { q: "¿Qué son los 'Datos'?", options: ["Información sin procesar", "Teclas", "Cables", "Marca de PC"], correct: 0, cat: "TIC", img: "📊" },
+            { q: "El rol del Usuario es:", options: ["Pagar luz", "Dar órdenes", "Limpiar", "Sustituir CPU"], correct: 1, cat: "HUMANWARE", img: "👤" },
+            { q: "WhatsApp es un software de:", options: ["Sistema", "Aplicación", "Hardware", "Periférico"], correct: 1, cat: "SOFTWARE", img: "📱" },
+            { q: "¿Qué pasa si hay Hardware pero NO Software?", options: ["Es veloz", "Piezas inútiles", "Limpia solo", "Usa IA"], correct: 1, cat: "SISTEMA", img: "🚫" },
+            { q: "Un microprocesador contiene:", options: ["Válvulas", "Millones de transistores", "Pascalinas", "Cables"], correct: 1, cat: "HARDWARE", img: "🔳" },
+            { q: "Primer computadora comercial:", options: ["ENIAC", "UNIVAC I", "Macbook", "IBM PC"], correct: 1, cat: "HISTORIA", img: "🏢" }
         ];
 
         window.checkDataAndStart = function() {
-            const nInput = document.getElementById('student-name-input').value.trim();
-            const dInput = document.getElementById('student-dni-input').value.trim();
-            const sInput = document.getElementById('student-school-input').value;
-            const cInput = document.getElementById('student-course-input').value;
-
-            if (nInput.length < 5 || dInput.length < 6 || !sInput || !cInput) {
-                document.getElementById('error-msg').classList.remove('hidden');
-                return;
-            }
-
-            window.examState.sName = nInput;
-            window.examState.sDni = dInput;
-            window.examState.sSchool = sInput;
-            window.examState.sCourse = cInput;
-
+            const n = document.getElementById('student-name-input').value.trim();
+            const d = document.getElementById('student-dni-input').value.trim();
+            const s = document.getElementById('student-school-input').value;
+            const c = document.getElementById('student-course-input').value;
+            if (n.length < 5 || d.length < 6 || !s || !c) { document.getElementById('error-msg').classList.remove('hidden'); return; }
+            window.examState.sName = n; window.examState.sDni = d; window.examState.sSchool = s; window.examState.sCourse = c;
             localStorage.setItem('examen_tics_marcelo_id', 'true');
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
@@ -232,13 +226,13 @@
         };
 
         function showQuestion() {
-            const q = questions[window.examState.currentQuestionIndex];
-            const container = document.getElementById('options-container');
+            const q = questions[window.examState.currentIdx];
             document.getElementById('question-text').innerText = q.q;
             document.getElementById('question-image').innerText = q.img;
             document.getElementById('current-category').innerText = q.cat;
-            document.getElementById('progress-text').innerText = `${window.examState.currentQuestionIndex + 1} / ${questions.length}`;
-            document.getElementById('progress-bar').style.width = `${((window.examState.currentQuestionIndex + 1) / questions.length) * 100}%`;
+            document.getElementById('progress-text').innerText = `${window.examState.currentIdx + 1} / 30`;
+            document.getElementById('progress-bar').style.width = `${((window.examState.currentIdx + 1) / 30) * 100}%`;
+            const container = document.getElementById('options-container');
             container.innerHTML = '';
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
@@ -254,96 +248,90 @@
             if (!window.examState.canAnswer) return;
             window.examState.canAnswer = false;
             btn.classList.add('selected-option');
-            if (idx === questions[window.examState.currentQuestionIndex].correct) window.examState.score++;
+            if (idx === questions[window.examState.currentIdx].correct) window.examState.score++;
             document.getElementById('feedback').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('feedback').classList.add('hidden');
-                window.examState.currentQuestionIndex++;
-                if (window.examState.currentQuestionIndex < questions.length) showQuestion();
-                else saveAndShowResults();
+                window.examState.currentIdx++;
+                if (window.examState.currentIdx < 30) showQuestion();
+                else saveResults();
             }, 600);
         }
 
-        async function saveAndShowResults() {
+        async function saveResults() {
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
-            const acc = Math.round((window.examState.score / questions.length) * 100);
-            document.getElementById('final-score').innerText = `${window.examState.score} / ${questions.length}`;
+            const acc = Math.round((window.examState.score / 30) * 100);
+            document.getElementById('final-score').innerText = `${window.examState.score} / 30`;
             document.getElementById('accuracy-text').innerText = `${acc}%`;
             document.getElementById('final-name').innerText = window.examState.sName;
-            
-            if (window.examState.score >= (questions.length * 0.7)) { 
+            if (window.examState.score >= 21) { 
                 document.getElementById('result-title').innerText = "¡Aprobado!";
                 document.getElementById('prize-section').classList.remove('hidden');
             } else {
                 document.getElementById('result-title').innerText = "Desaprobado";
                 document.getElementById('fail-section').classList.remove('hidden');
             }
-            
             if (window.examState.user) {
                 try {
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
-                        nombre: window.examState.sName, 
-                        dni: String(window.examState.sDni), 
-                        escuela: window.examState.sSchool, 
-                        curso: window.examState.sCourse, 
-                        aciertos: window.examState.score, 
-                        total: questions.length, 
-                        porcentaje: acc, 
-                        fecha: new Date().toLocaleString()
+                        nombre: window.examState.sName, dni: String(window.examState.sDni), escuela: window.examState.sSchool, curso: window.examState.sCourse, aciertos: window.examState.score, total: 30, porcentaje: acc, fecha: new Date().toLocaleString()
                     });
-                } catch(e) { console.error("Error Firestore Save:", e); }
+                } catch(e) {}
             }
         }
 
         window.openAdmin = function() {
-            const p = prompt("Clave Profesor:");
+            const p = prompt("Clave Docente:");
             if (p === "marcelo2024") {
                 document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('already-done-screen').classList.add('hidden');
                 document.getElementById('admin-screen').classList.remove('hidden');
                 window.loadAdminData();
-            } else if (p !== null) alert("Error");
+            } else if (p !== null) alert("Clave Incorrecta");
         };
 
-        window.closeAdmin = function() { 
-            document.getElementById('admin-screen').classList.add('hidden'); 
-            document.getElementById('start-screen').classList.remove('hidden');
-        };
+        window.closeAdmin = function() { location.reload(); };
 
         window.loadAdminData = async function() {
             const body = document.getElementById('results-body');
-            body.innerHTML = '<tr><td colspan="7" class="text-center py-8">Descargando datos...</td></tr>';
+            body.innerHTML = '<tr><td colspan="7" class="text-center py-8">Sincronizando con Firebase...</td></tr>';
             try {
                 if (!window.examState.user) await signInAnonymously(auth);
-                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
-                window.examState.resultsCache = [];
-                snap.forEach(d => window.examState.resultsCache.push(d.data()));
-                window.examState.resultsCache.sort((a, b) => String(a.dni).localeCompare(String(b.dni)));
-                document.getElementById('admin-count').innerText = `${window.examState.resultsCache.length} Alumnos Registrados`;
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'resultados');
+                const snap = await getDocs(colRef);
+                const cache = [];
+                snap.forEach(d => cache.push(d.data()));
+                cache.sort((a, b) => String(a.dni).localeCompare(String(b.dni)));
+                document.getElementById('admin-count').innerText = `${cache.length} Alumnos Registrados`;
                 body.innerHTML = '';
-                window.examState.resultsCache.forEach(r => {
+                if (cache.length === 0) body.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-slate-500 italic">No hay datos. Asegúrate de que alguien haya terminado el examen y de que las REGLAS en Firebase digan "if true;".</td></tr>';
+                cache.forEach(r => {
                     const tr = document.createElement('tr');
-                    const ap = r.aciertos >= (questions.length * 0.7);
-                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-slate-300 text-center">${r.escuela}</td><td class="text-slate-300 text-center">${r.curso || '-'}</td><td class="text-white font-semibold text-center text-center">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center text-center">${r.aciertos}</td><td class="text-slate-400 text-center text-center">${r.porcentaje}%</td><td class="text-[9px] text-slate-500 text-center text-center">${r.fecha || '-'}</td>`;
+                    const ap = r.aciertos >= 21;
+                    tr.innerHTML = `<td class="font-bold text-blue-400">${r.dni}</td><td>${r.escuela}</td><td>${r.curso || '-'}</td><td class="text-white font-semibold">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold">${r.aciertos}/30</td><td>${r.porcentaje}%</td><td class="text-[9px] text-slate-500">${r.fecha || '-'}</td>`;
                     body.appendChild(tr);
                 });
-            } catch(e) { body.innerHTML = '<tr><td colspan="7" class="text-center text-red-500 py-8">Error de conexión Firestore.</td></tr>'; }
+                window.resultsCache = cache;
+            } catch(e) { 
+                console.error(e);
+                body.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-8">Error de conexión: ${e.message}. Verifica que la Autenticación ANÓNIMA esté habilitada en Firebase.</td></tr>`; 
+            }
         };
 
         window.downloadCSV = function() {
-            if (window.examState.resultsCache.length === 0) return;
+            if (!window.resultsCache) return;
             let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Fecha\n";
-            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.fecha}\n`);
+            window.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.fecha}\n`);
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'Resultados_Examen_TIC.csv');
+            a.setAttribute('download', 'Reporte_TIC_Final.csv');
             a.click();
         };
 
         const init = async () => {
-            try { await signInAnonymously(auth); } catch(e) {}
             onAuthStateChanged(auth, (u) => {
                 window.examState.user = u;
                 if (window.examState.user && localStorage.getItem('examen_tics_marcelo_id')) {
@@ -351,9 +339,8 @@
                     document.getElementById('already-done-screen').classList.remove('hidden');
                 }
             });
-            document.getElementById('print-date').innerText = new Date().toLocaleDateString();
+            try { await signInAnonymously(auth); } catch(e) {}
         };
-
         init();
     </script>
 </body>
