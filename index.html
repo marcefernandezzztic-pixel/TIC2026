@@ -16,36 +16,38 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .selected-option { background-color: #334155 !important; border-color: #64748b !important; }
         .admin-table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 750px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 800px; }
         th, td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         th { background: rgba(15, 23, 42, 0.8); color: #94a3b8; font-weight: 600; text-transform: uppercase; }
         @media print {
-            body { background: white !important; color: black !important; }
-            .no-print, button { display: none !important; }
-            .glass { background: white !important; color: black !important; border: 1px solid #000 !important; }
-            table { color: black !important; border: 1px solid #000 !important; }
-            th, td { border: 1px solid #000 !important; color: black !important; }
+            body { background: white !important; color: black !important; padding: 0; }
+            #admin-screen { display: block !important; position: static !important; width: 100% !important; background: white !important; height: auto !important; }
+            .glass { background: white !important; border: 1px solid #ddd !important; color: black !important; backdrop-filter: none !important; box-shadow: none !important; border-radius: 0 !important; }
+            .no-print, button, #current-category, #progress-text, .w-full.bg-slate-800 { display: none !important; }
+            table { width: 100% !important; border: 1px solid #000 !important; color: black !important; font-size: 9pt; }
+            th, td { border: 1px solid #000 !important; color: black !important; padding: 6px; }
+            h2, p, span, h1 { color: black !important; }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 text-center">
 
-    <!-- Pantalla de Bloqueo -->
+    <!-- Pantalla de Bloqueo por Intento Único -->
     <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in">
         <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
             <div class="text-6xl mb-4">🚫</div>
             <h2 class="text-2xl font-bold mb-2 text-white">Intento Agotado</h2>
-            <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento. Tus respuestas ya fueron enviadas al Profesor Marcelo Fernández.</p>
+            <p class="text-slate-400 mb-6 leading-relaxed text-center">Solo se permite un único intento por evaluación. Tus respuestas ya fueron enviadas al Profesor Marcelo Fernández.</p>
         </div>
         <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
 
-    <!-- Inicio -->
+    <!-- Registro Inicial -->
     <div id="start-screen" class="max-w-md w-full text-center fade-in">
         <div class="mb-6">
-            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2">Prof. Marcelo Fernández</p>
+            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
             <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Desafiando TICs</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">Base de Datos: examen-tic • 30 Preguntas</p>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center text-center">Evaluación Final • 30 Preguntas Mezcladas</p>
         </div>
         
         <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left border-white/5">
@@ -60,16 +62,16 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block">Escuela</label>
-                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center">Escuela</label>
+                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm cursor-pointer">
                             <option value="" disabled selected>Elegir</option>
                             <option value="4027">4027</option>
                             <option value="4016">4016</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block">Curso</label>
-                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block text-center">Curso</label>
+                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm cursor-pointer">
                             <option value="" disabled selected>Elegir</option>
                             <option value="3°1°">3°1°</option>
                             <option value="3°4°">3°4°</option>
@@ -77,35 +79,46 @@
                     </div>
                 </div>
             </div>
-            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase">⚠️ Completa todos los datos</p>
+            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase text-center">⚠️ Completa todos los datos para iniciar</p>
         </div>
 
         <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
         <button onclick="window.openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
 
-    <!-- Juego -->
+    <!-- Pantalla de Juego -->
     <div id="game-screen" class="hidden max-w-md w-full fade-in">
         <div class="flex items-center justify-between mb-4 px-2">
             <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase" id="current-category">Evaluación</span>
             <span class="text-[10px] font-bold text-slate-500" id="progress-text">1 / 30</span>
         </div>
-        <div class="w-full bg-slate-800 h-1 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
-        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[160px] text-center border-white/10 shadow-2xl">
-            <div id="question-image" class="text-4xl mb-4">💻</div>
-            <h2 id="question-text" class="text-lg font-semibold text-white px-2"></h2>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
+        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[180px] text-center border-white/10 shadow-2xl">
+            <div id="question-image" class="text-4xl mb-4 text-center">💻</div>
+            <h2 id="question-text" class="text-lg font-semibold leading-tight text-white px-2 text-center"></h2>
         </div>
         <div id="options-container" class="space-y-3"></div>
+        <div id="feedback" class="hidden fixed inset-x-0 bottom-10 px-4 flex justify-center z-50">
+            <div class="py-3 px-8 rounded-full font-bold shadow-2xl text-white bg-slate-800 border border-white/10 text-sm">Registrando respuesta...</div>
+        </div>
     </div>
 
     <!-- Resultados -->
     <div id="result-screen" class="hidden max-w-md w-full text-center fade-in">
         <div class="glass p-8 rounded-[40px] mb-8 shadow-2xl border-white/5">
-            <div class="text-6xl mb-4">📊</div>
-            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white"></h2>
-            <div class="text-5xl font-black text-blue-400 mb-4" id="final-score">0/30</div>
+            <div class="text-6xl mb-4 text-center">📊</div>
+            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white text-center"></h2>
+            <div class="text-5xl font-black text-blue-400 mb-4 text-center" id="final-score">0/30</div>
+            <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl">
+                <p class="text-white font-bold text-lg uppercase text-center">¡EXCELENTE!</p>
+                <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase tracking-widest text-center">Sincronizado con examen-tic</p>
+            </div>
+            <div id="fail-section" class="hidden mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-2xl">
+                <p class="text-red-400 font-bold text-lg uppercase text-center text-center text-center">No alcanzaste el mínimo</p>
+                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center text-center">Se requiere un 70% (21 aciertos) para aprobar.</p>
+            </div>
             <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5">
-                <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
+                <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
             </div>
         </div>
         <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
@@ -113,22 +126,23 @@
 
     <!-- Panel Docente -->
     <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[92vh]">
-        <div class="flex justify-between items-center mb-6 px-4 no-print">
-            <div class="text-left"><h2 class="text-2xl font-bold text-white">Reporte: examen-tic</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Profesor Marcelo Fernández</p></div>
+        <div class="flex justify-between items-center mb-6 px-4 no-print text-center">
+            <div class="text-left"><h2 class="text-2xl font-bold text-white text-left">Reporte Final: examen-tic</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Profesor Marcelo Fernández</p></div>
             <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors">✖</button>
         </div>
 
-        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5">
-            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print">
+        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center">
+            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center text-center text-center">
                 <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5" id="admin-count">Sincronizando...</span>
                 <div class="flex gap-2">
                     <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Actualizar</button>
-                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir</button>
+                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir Reporte</button>
+                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Exportar CSV</button>
                 </div>
             </div>
-            <div class="admin-table-container flex-1 overflow-y-auto p-4">
-                <table id="results-table">
-                    <thead><tr><th>DNI</th><th>Escuela</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Fecha</th></tr></thead>
+            <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
+                <table id="results-table" class="text-center">
+                    <thead><tr><th>DNI</th><th>Escuela</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Fecha y Hora</th></tr></thead>
                     <tbody id="results-body"></tbody>
                 </table>
             </div>
@@ -144,50 +158,70 @@
         const firebaseConfig = {
             apiKey: "AIzaSyAI-r_ZLjbz2jnVgfI4-HHBnOFDEvOOCfw",
             authDomain: "club-cc6a8.firebaseapp.com",
+            databaseURL: "https://club-cc6a8-default-rtdb.firebaseio.com",
             projectId: "club-cc6a8",
             storageBucket: "club-cc6a8.firebasestorage.app",
             messagingSenderId: "754977085906",
             appId: "1:754977085906:web:c070776aac822175c2100b"
         };
 
-        const appId = 'marcelo-fernandez-tics-2026';
+        const appId = 'tics-eval-final-marcelo-2026';
         const app = initializeApp(firebaseConfig);
         
-        // AQUÍ ESTÁ EL CAMBIO: Forzamos el uso de la base de datos "examen-tic"
+        // Conexión específica a la base 'examen-tic'
         const db = getFirestore(app, 'examen-tic');
         const auth = getAuth(app);
 
         window.examState = {
             sName: "", sDni: "", sSchool: "", sCourse: "",
-            currentIdx: 0, score: 0, user: null
+            currentIdx: 0, score: 0, user: null, canAnswer: true, resultsCache: []
         };
 
         const questions = [
-            { q: "¿Cómo se define el término 'Hardware'?", options: ["Programas y apps", "Componentes físicos y tangibles", "Datos en la nube", "Conexión a internet"], correct: 1, cat: "HARDWARE", img: "🔌" },
-            { q: "Se le considera el 'cerebro' de la computadora:", options: ["Memoria RAM", "Disco Duro", "CPU (Procesador)", "Tarjeta de Video"], correct: 2, cat: "HARDWARE", img: "🧠" },
-            { q: "¿Cuál es un periférico de ENTRADA puro?", options: ["Monitor", "Teclado", "Impresora", "Parlantes"], correct: 1, cat: "HARDWARE", img: "⌨️" },
-            { q: "Para ver la salida visual usas el:", options: ["Escáner", "Monitor", "Mouse", "Micrófono"], correct: 1, cat: "HARDWARE", img: "🖥️" },
-            { q: "Un pendrive que guarda y lee información se considera:", options: ["Entrada", "Salida", "Mixto", "Solo lectura"], correct: 2, cat: "HARDWARE", img: "🔄" },
-            { q: "El 'Software' se refiere a:", options: ["Cables", "Programas e instrucciones lógicas", "Carcasa", "Pantalla"], correct: 1, cat: "CONCEPTOS", img: "📀" },
-            { q: "WhatsApp y Spotify son ejemplos de:", options: ["Sistemas Operativos", "Software de Aplicación", "Hardware", "Periféricos"], correct: 1, cat: "SOFTWARE", img: "📱" },
-            { q: "¿Qué son los 'Datos' en informática?", options: ["Información sin procesar", "Teclas", "Cables", "Marca de PC"], correct: 0, cat: "TIC", img: "📊" },
-            { q: "El rol del Usuario es:", options: ["Pagar el servicio", "Dar propósito y órdenes", "Limpiar", "Sustituir CPU"], correct: 1, cat: "HUMANWARE", img: "👤" },
-            { q: "Primer computadora comercial de uso general:", options: ["ENIAC", "UNIVAC I", "Macintosh", "IBM PC"], correct: 1, cat: "HISTORIA", img: "🏢" }
-            // Se pueden agregar las 30 preguntas completas aquí
+            { q: "¿Cómo se define el término 'Hardware'?", options: ["Componentes físicos y tangibles", "Programas y apps", "Datos en la nube", "Conexión a internet"], correct: "Componentes físicos y tangibles", cat: "HARDWARE", img: "🔌" },
+            { q: "Se le considera el 'cerebro' de la computadora:", options: ["CPU (Procesador)", "Memoria RAM", "Disco Duro", "Tarjeta de Video"], correct: "CPU (Procesador)", cat: "HARDWARE", img: "🧠" },
+            { q: "¿Cuál es un periférico de ENTRADA puro?", options: ["Teclado", "Monitor", "Impresora", "Parlantes"], correct: "Teclado", cat: "HARDWARE", img: "⌨️" },
+            { q: "Para ver la salida visual usas el:", options: ["Monitor", "Escáner", "Mouse", "Micrófono"], correct: "Monitor", cat: "HARDWARE", img: "🖥️" },
+            { q: "Un pendrive que guarda y lee información se considera:", options: ["Mixto", "Entrada", "Salida", "Solo lectura"], correct: "Mixto", cat: "HARDWARE", img: "🔄" },
+            { q: "El 'Software' se refiere a:", options: ["Programas e instrucciones lógicas", "Cables", "Carcasa", "Pantalla"], correct: "Programas e instrucciones lógicas", cat: "CONCEPTOS", img: "📀" },
+            { q: "WhatsApp y Spotify son ejemplos de:", options: ["Software de Aplicación", "Sistemas Operativos", "Hardware", "Periféricos"], correct: "Software de Aplicación", cat: "SOFTWARE", img: "📱" },
+            { q: "¿Qué son los 'Datos' en informática?", options: ["Información sin procesar", "Teclas", "Cables", "Marca de PC"], correct: "Información sin procesar", cat: "TIC", img: "📊" },
+            { q: "El rol del Usuario es:", options: ["Dar propósito y órdenes", "Pagar el servicio", "Limpiar", "Sustituir CPU"], correct: "Dar propósito y órdenes", cat: "HUMANWARE", img: "👤" },
+            { q: "Primer computadora comercial de uso general:", options: ["UNIVAC I", "ENIAC", "Macintosh", "IBM PC"], correct: "UNIVAC I", cat: "HISTORIA", img: "🏢" },
+            { q: "¿Qué civilizaciones antiguas usaron el ábaco?", options: ["Chinos, Griegos y Romanos", "Solo Mayas", "Solo Incas", "Vikingos"], correct: "Chinos, Griegos y Romanos", cat: "HISTORIA", img: "🏛️" },
+            { q: "Contribución de Al-Juarismi:", options: ["Concepto de Algoritmo", "El mouse", "La pantalla", "El chip"], correct: "Concepto de Algoritmo", cat: "HISTORIA", img: "🕌" },
+            { q: "La Pascalina sumaba, ¿qué hacía el 'Step Reckoner'?", options: ["Multiplicaba y dividía", "Nada más", "Usaba vapor", "Tenía teclado"], correct: "Multiplicaba y dividía", cat: "HISTORIA", img: "⚙️" },
+            { q: "¿Por qué el Telar de Jacquard es clave?", options: ["Tarjetas perforadas", "Internet", "Portátil", "Tenía CPU"], correct: "Tarjetas perforadas", cat: "HISTORIA", img: "🧵" },
+            { q: "En la Máquina Analítica, el 'almacén' era:", options: ["La memoria", "El procesador", "La impresora", "El teclado"], correct: "La memoria", cat: "HISTORIA", img: "🧠" },
+            { q: "Visión de Ada Lovelace:", options: ["Procesar música y arte", "Vender PC", "Redes sociales", "IA"], correct: "Procesar música y arte", cat: "HISTORIA", img: "👩‍💻" },
+            { q: "Operadores de George Boole:", options: ["AND, OR, NOT", "+, -, *", "IF, ELSE", "Logaritmos"], correct: "AND, OR, NOT", cat: "LÓGICA", img: "💡" },
+            { q: "Hito de Claude Shannon en 1937:", options: ["Lógica booleana en circuitos", "Google", "Wi-Fi", "Windows"], correct: "Lógica booleana en circuitos", cat: "HISTORIA", img: "🧠" },
+            { q: "Impacto de Hollerith en 1890:", options: ["Redujo años a meses el censo", "Atrasó el censo", "No funcionó", "Fue manual"], correct: "Redujo años a meses el censo", cat: "HISTORIA", img: "📑" },
+            { q: "¿Qué define a la 'Máquina de Turing'?", options: ["Modelo matemático universal", "Vapor", "Escritura", "Reloj"], correct: "Modelo matemático universal", cat: "HISTORIA", img: "⚙️" },
+            { q: "Propósito de Colossus (1943):", options: ["Descifrar códigos de guerra", "Censos", "Jugar", "Navegar"], correct: "Descifrar códigos de guerra", cat: "HISTORIA", img: "🕵️" },
+            { q: "¿Por qué ENIAC es distinta a Colossus?", options: ["Programable y general", "Pequeña", "A batería", "Lenta"], correct: "Programable y general", cat: "HISTORIA", img: "🏢" },
+            { q: "Velocidad de la ENIAC:", options: ["5.000 sumas/segundo", "1 suma/hora", "1 MHz", "1 GHz"], correct: "5.000 sumas/segundo", cat: "HISTORIA", img: "⚡" },
+            { q: "Desventaja de tubos de vacío:", options: ["Calor y fallas", "Baratos", "Invisibles", "Bajo consumo"], correct: "Calor y fallas", cat: "HISTORIA", img: "🔥" },
+            { q: "Hito de la 2da Generación:", options: ["Transistor", "Válvulas", "Chips", "IA"], correct: "Transistor", cat: "GENERACIONES", img: "📻" },
+            { q: "Inicio de la 3ra Generación:", options: ["Chips (Circuitos Integrados)", "Transistor", "Vapor", "Luz"], correct: "Chips (Circuitos Integrados)", cat: "GENERACIONES", img: "🔳" },
+            { q: "La 4ta Generación nace con el:", options: ["Microprocesador", "Ábaco", "Telar", "Relé"], correct: "Microprocesador", cat: "GENERACIONES", img: "📦" },
+            { q: "Característica de la 5ta Generación:", options: ["IA y Robótica", "Gigantes", "Manuales", "Mecánicas"], correct: "IA y Robótica", cat: "IA", img: "🤖" },
+            { q: "¿Qué pasa si hay Hardware pero NO Software?", options: ["Son piezas inútiles", "Es veloz", "Limpia solo", "Usa IA"], correct: "Son piezas inútiles", cat: "SISTEMA", img: "🚫" },
+            { q: "Microprocesador moderno contiene:", options: ["Millones de transistores", "Válvulas", "Pascalinas", "Cables"], correct: "Millones de transistores", cat: "HARDWARE", img: "🔳" }
         ];
 
         onAuthStateChanged(auth, (u) => {
             window.examState.user = u;
-            if (u && localStorage.getItem('examen_marcelo_finalizado')) {
+            if (u && localStorage.getItem('examen_tics_marcelo_2026_done')) {
                 document.getElementById('start-screen').classList.add('hidden');
                 document.getElementById('already-done-screen').classList.remove('hidden');
             }
         });
 
-        const startAuth = async () => {
+        const initAuth = async () => {
             try { await signInAnonymously(auth); } catch(e) {}
         };
-        startAuth();
+        initAuth();
 
         window.checkDataAndStart = function() {
             const n = document.getElementById('student-name-input').value.trim();
@@ -201,27 +235,51 @@
             showQuestion();
         };
 
+        // Función Fisher-Yates para mezclar opciones
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         function showQuestion() {
             const q = questions[window.examState.currentIdx];
+            const container = document.getElementById('options-container');
             document.getElementById('question-text').innerText = q.q;
             document.getElementById('question-image').innerText = q.img;
             document.getElementById('current-category').innerText = q.cat;
             document.getElementById('progress-text').innerText = `${window.examState.currentIdx + 1} / ${questions.length}`;
             document.getElementById('progress-bar').style.width = `${((window.examState.currentIdx + 1) / questions.length) * 100}%`;
-            const container = document.getElementById('options-container');
+            
             container.innerHTML = '';
-            q.options.forEach((opt, idx) => {
+            
+            // Mezclamos las opciones
+            const shuffledOptions = shuffle([...q.options]);
+            
+            shuffledOptions.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn-option w-full p-4 glass rounded-2xl text-left text-sm hover:bg-white/10 flex items-center border border-white/5';
                 btn.innerHTML = `<span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center mr-3 text-xs font-bold text-slate-400 shrink-0 border border-white/10 text-center">${String.fromCharCode(65 + idx)}</span><span class="text-slate-100">${opt}</span>`;
-                btn.onclick = () => {
-                    if (idx === q.correct) window.examState.score++;
-                    window.examState.currentIdx++;
-                    if (window.examState.currentIdx < questions.length) showQuestion();
-                    else finalize();
-                };
+                btn.onclick = () => checkAnswer(opt, btn);
                 container.appendChild(btn);
             });
+            window.examState.canAnswer = true;
+        }
+
+        function checkAnswer(selectedText, btn) {
+            if (!window.examState.canAnswer) return;
+            window.examState.canAnswer = false;
+            btn.classList.add('selected-option');
+            if (selectedText === questions[window.examState.currentIdx].correct) window.examState.score++;
+            document.getElementById('feedback').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('feedback').classList.add('hidden');
+                window.examState.currentIdx++;
+                if (window.examState.currentIdx < questions.length) showQuestion();
+                else finalize();
+            }, 600);
         }
 
         async function finalize() {
@@ -230,14 +288,24 @@
             const acc = Math.round((window.examState.score / questions.length) * 100);
             document.getElementById('final-score').innerText = `${window.examState.score} / ${questions.length}`;
             document.getElementById('final-name').innerText = window.examState.sName;
-            document.getElementById('result-title').innerText = acc >= 70 ? "¡APROBADO!" : "INTÉNTALO DE NUEVO";
-            localStorage.setItem('examen_marcelo_finalizado', 'true');
+            document.getElementById('result-title').innerText = acc >= 70 ? "¡APROBADO!" : "EXAMEN FINALIZADO";
+            if (acc >= 70) document.getElementById('prize-section').classList.remove('hidden');
+            localStorage.setItem('examen_tics_marcelo_2026_done', 'true');
+            
+            // Intentamos guardar en Firestore
             if (window.examState.user) {
                 try {
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
-                        nombre: window.examState.sName, dni: String(window.examState.sDni), escuela: window.examState.sSchool, curso: window.examState.sCourse, aciertos: window.examState.score, total: questions.length, porcentaje: acc, fecha: new Date().toLocaleString()
+                        nombre: window.examState.sName,
+                        dni: String(window.examState.sDni),
+                        escuela: window.examState.sSchool,
+                        curso: window.examState.sCourse,
+                        aciertos: window.examState.score,
+                        total: questions.length,
+                        porcentaje: acc,
+                        fecha: new Date().toLocaleString()
                     });
-                } catch(e) {}
+                } catch(e) { console.error("Error al guardar:", e); }
             }
         }
 
@@ -246,28 +314,51 @@
                 document.getElementById('start-screen').classList.add('hidden');
                 document.getElementById('admin-screen').classList.remove('hidden');
                 window.loadAdminData();
-            }
+            } else alert("Clave incorrecta");
         };
 
         window.closeAdmin = () => location.reload();
 
         window.loadAdminData = async function() {
             const body = document.getElementById('results-body');
-            body.innerHTML = '<tr><td colspan="7">Cargando datos de examen-tic...</td></tr>';
+            body.innerHTML = '<tr><td colspan="7" class="text-center py-8 italic">Consultando base examen-tic...</td></tr>';
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
                 const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
                 const list = [];
                 snap.forEach(d => list.push(d.data()));
-                list.sort((a,b) => a.dni.localeCompare(b.dni));
+                
+                // Ordenar por DNI en memoria (Regla 2)
+                list.sort((a,b) => String(a.dni).localeCompare(String(b.dni)));
+                
+                window.examState.resultsCache = list;
                 document.getElementById('admin-count').innerText = `${list.length} Alumnos Registrados`;
                 body.innerHTML = '';
+                
+                if (list.length === 0) {
+                    body.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-slate-500">No hay registros aún.</td></tr>';
+                    return;
+                }
+
                 list.forEach(r => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${r.dni}</td><td>${r.escuela}</td><td>${r.curso}</td><td>${r.nombre}</td><td class="font-bold ${r.aciertos>=7?'text-emerald-400':'text-red-400'}">${r.aciertos}</td><td>${r.porcentaje}%</td><td>${r.fecha.split(',')[0]}</td>`;
+                    const ap = r.aciertos >= 21;
+                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-slate-300 text-center">${r.escuela}</td><td class="text-slate-300 text-center">${r.curso}</td><td class="text-white font-semibold text-center text-center">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center">${r.aciertos}/30</td><td class="text-slate-400 text-center">${r.porcentaje}%</td><td class="text-[9px] text-slate-500 text-center">${r.fecha || '-'}</td>`;
                     body.appendChild(tr);
                 });
-            } catch(e) { body.innerHTML = `<tr><td colspan="7" class="text-red-400">Error: ${e.message}</td></tr>`; }
+            } catch(e) { body.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-8">Error Firestore: ${e.message}</td></tr>`; }
+        };
+
+        window.downloadCSV = function() {
+            if (window.examState.resultsCache.length === 0) return;
+            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Fecha Entrega\n";
+            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.fecha}\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Resultados_TIC_Completo.csv');
+            a.click();
         };
     </script>
 </body>
