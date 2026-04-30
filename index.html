@@ -16,9 +16,23 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .selected-option { background-color: #334155 !important; border-color: #64748b !important; }
         .admin-table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 850px; }
         th, td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         th { background: rgba(15, 23, 42, 0.8); color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        
+        #anti-cheat-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
         @media print {
             body { background: white !important; color: black !important; padding: 0; }
             #admin-screen { display: block !important; position: static !important; width: 100% !important; background: white !important; height: auto !important; }
@@ -32,12 +46,20 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 text-center">
 
-    <!-- Pantalla de Bloqueo por Intento Único -->
-    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in">
+    <!-- Pantalla Anti-Trampa -->
+    <div id="anti-cheat-overlay">
+        <div class="text-6xl mb-6">⚠️</div>
+        <h2 class="text-3xl font-bold text-red-500 mb-4">DETECCIÓN DE CAMBIO DE VENTANA</h2>
+        <p class="text-slate-300 max-w-md mb-8">Has salido del examen. Esta acción se registra como una falta técnica. Vuelve a pantalla completa para continuar.</p>
+        <button onclick="window.resumeExam()" class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-all uppercase tracking-widest">Continuar Examen</button>
+    </div>
+
+    <!-- Pantalla de Bloqueo -->
+    <div id="already-done-screen" class="hidden max-w-md w-full text-center fade-in text-center">
         <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
-            <div class="text-6xl mb-4">🚫</div>
+            <div class="text-6xl mb-4 text-center">🚫</div>
             <h2 class="text-2xl font-bold mb-2 text-white">Intento Agotado</h2>
-            <p class="text-slate-400 mb-6 leading-relaxed text-center">Solo se permite un único intento por evaluación. Tus respuestas ya fueron enviadas al Profesor Marcelo Fernández.</p>
+            <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento por evaluación. Tus resultados están en el sistema del Profesor Fernández.</p>
         </div>
         <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
@@ -46,18 +68,18 @@
     <div id="start-screen" class="max-w-md w-full text-center fade-in">
         <div class="mb-6">
             <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
-            <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Desafiando TICs</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center text-center">Evaluación Final • 30 Preguntas Mezcladas</p>
+            <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 text-center text-center">Desafiando TICs</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center">Evaluación 2026 • Preguntas y Opciones Aleatorias</p>
         </div>
         
         <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left border-white/5">
             <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Nombre y Apellido del Alumno</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Nombre y Apellido</label>
                     <input type="text" id="student-name-input" placeholder="Ej: Juan Pérez" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Sin puntos)</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Solo números)</label>
                     <input type="number" id="student-dni-input" placeholder="Ej: 45123456" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -79,14 +101,16 @@
                     </div>
                 </div>
             </div>
-            <p id="error-msg" class="text-red-400 text-[10px] mt-4 hidden text-center font-bold uppercase text-center">⚠️ Completa todos los datos para iniciar</p>
+            <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
+                <p class="text-[10px] text-blue-400 font-bold uppercase text-center leading-tight">Aviso: El examen se mezcla aleatoriamente para cada alumno. Mantén el foco en tu pantalla.</p>
+            </div>
         </div>
 
-        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
+        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Entrar al Examen</button>
         <button onclick="window.openAdmin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
 
-    <!-- Pantalla de Juego -->
+    <!-- Juego -->
     <div id="game-screen" class="hidden max-w-md w-full fade-in">
         <div class="flex items-center justify-between mb-4 px-2">
             <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase" id="current-category">Evaluación</span>
@@ -104,45 +128,38 @@
     </div>
 
     <!-- Resultados -->
-    <div id="result-screen" class="hidden max-w-md w-full text-center fade-in">
+    <div id="result-screen" class="hidden max-w-md w-full text-center fade-in text-center">
         <div class="glass p-8 rounded-[40px] mb-8 shadow-2xl border-white/5">
             <div class="text-6xl mb-4 text-center">📊</div>
-            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white text-center"></h2>
-            <div class="text-5xl font-black text-blue-400 mb-4 text-center" id="final-score">0/30</div>
-            <div id="prize-section" class="hidden mb-6 p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl">
-                <p class="text-white font-bold text-lg uppercase text-center">¡EXCELENTE!</p>
-                <p class="text-[9px] text-emerald-400 mt-1 font-bold uppercase tracking-widest text-center">Sincronizado con examen-tic</p>
-            </div>
-            <div id="fail-section" class="hidden mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-2xl">
-                <p class="text-red-400 font-bold text-lg uppercase text-center text-center text-center">No alcanzaste el mínimo</p>
-                <p class="text-[10px] text-slate-400 mt-2 font-semibold text-center text-center">Se requiere un 70% (21 aciertos) para aprobar.</p>
-            </div>
+            <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white"></h2>
+            <div class="text-5xl font-black text-blue-400 mb-4" id="final-score">0/30</div>
             <div class="bg-slate-900/50 p-4 rounded-2xl text-left space-y-2 border border-white/5">
                 <div class="flex justify-between items-center text-xs"><p class="text-slate-500 uppercase font-bold text-center">Alumno</p><p id="final-name" class="font-bold text-white uppercase truncate ml-4 text-right"></p></div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-2 text-xs text-center"><p class="text-slate-500 uppercase font-bold text-center">Cambios de Ventana</p><p id="final-violations" class="font-bold text-red-400 ml-4 text-right">0</p></div>
             </div>
         </div>
         <button onclick="window.openAdmin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
 
     <!-- Panel Docente -->
-    <div id="admin-screen" class="hidden w-full max-w-5xl fade-in flex flex-col h-screen max-h-[92vh]">
+    <div id="admin-screen" class="hidden w-full max-w-6xl fade-in flex flex-col h-screen max-h-[92vh]">
         <div class="flex justify-between items-center mb-6 px-4 no-print text-center">
-            <div class="text-left"><h2 class="text-2xl font-bold text-white text-left">Reporte Final: examen-tic</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Profesor Marcelo Fernández</p></div>
-            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors">✖</button>
+            <div class="text-left text-left"><h2 class="text-2xl font-bold text-white text-left">Reporte con Alertas de Fraude</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left">Profesor Marcelo Fernández</p></div>
+            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors text-center">✖</button>
         </div>
 
         <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center">
-            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center text-center text-center">
+            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center text-center">
                 <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5" id="admin-count">Sincronizando...</span>
-                <div class="flex gap-2">
+                <div class="flex gap-2 text-center text-center">
                     <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Actualizar</button>
-                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir Reporte</button>
-                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Exportar CSV</button>
+                    <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir</button>
+                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Excel (CSV)</button>
                 </div>
             </div>
             <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
                 <table id="results-table" class="text-center">
-                    <thead><tr><th>DNI</th><th>Escuela</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Fecha y Hora</th></tr></thead>
+                    <thead><tr><th>DNI</th><th>Escuela</th><th>Curso</th><th>Alumno</th><th>Nota</th><th>%</th><th>Faltas</th><th>Hora</th></tr></thead>
                     <tbody id="results-body"></tbody>
                 </table>
             </div>
@@ -154,7 +171,6 @@
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // CONFIGURACIÓN club-cc6a8
         const firebaseConfig = {
             apiKey: "AIzaSyAI-r_ZLjbz2jnVgfI4-HHBnOFDEvOOCfw",
             authDomain: "club-cc6a8.firebaseapp.com",
@@ -165,19 +181,13 @@
             appId: "1:754977085906:web:c070776aac822175c2100b"
         };
 
-        const appId = 'tics-eval-final-marcelo-2026';
+        const appId = 'tics-eval-random-anti-cheat-2026';
         const app = initializeApp(firebaseConfig);
-        
-        // Conexión específica a la base 'examen-tic'
         const db = getFirestore(app, 'examen-tic');
         const auth = getAuth(app);
 
-        window.examState = {
-            sName: "", sDni: "", sSchool: "", sCourse: "",
-            currentIdx: 0, score: 0, user: null, canAnswer: true, resultsCache: []
-        };
-
-        const questions = [
+        // Banco de 30 Preguntas
+        let questions = [
             { q: "¿Cómo se define el término 'Hardware'?", options: ["Componentes físicos y tangibles", "Programas y apps", "Datos en la nube", "Conexión a internet"], correct: "Componentes físicos y tangibles", cat: "HARDWARE", img: "🔌" },
             { q: "Se le considera el 'cerebro' de la computadora:", options: ["CPU (Procesador)", "Memoria RAM", "Disco Duro", "Tarjeta de Video"], correct: "CPU (Procesador)", cat: "HARDWARE", img: "🧠" },
             { q: "¿Cuál es un periférico de ENTRADA puro?", options: ["Teclado", "Monitor", "Impresora", "Parlantes"], correct: "Teclado", cat: "HARDWARE", img: "⌨️" },
@@ -210,6 +220,43 @@
             { q: "Microprocesador moderno contiene:", options: ["Millones de transistores", "Válvulas", "Pascalinas", "Cables"], correct: "Millones de transistores", cat: "HARDWARE", img: "🔳" }
         ];
 
+        window.examState = {
+            sName: "", sDni: "", sSchool: "", sCourse: "",
+            currentIdx: 0, score: 0, user: null, canAnswer: true,
+            violations: 0, isActive: false, resultsCache: []
+        };
+
+        // Función Fisher-Yates para mezclar arreglos
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Detección de Foco
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && window.examState.isActive) {
+                window.examState.violations++;
+                document.getElementById('anti-cheat-overlay').style.display = 'flex';
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (window.examState.isActive) {
+                window.examState.violations++;
+                document.getElementById('anti-cheat-overlay').style.display = 'flex';
+            }
+        });
+
+        window.resumeExam = () => {
+            document.getElementById('anti-cheat-overlay').style.display = 'none';
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        };
+
         onAuthStateChanged(auth, (u) => {
             window.examState.user = u;
             if (u && localStorage.getItem('examen_tics_marcelo_2026_done')) {
@@ -228,21 +275,29 @@
             const d = document.getElementById('student-dni-input').value.trim();
             const s = document.getElementById('student-school-input').value;
             const c = document.getElementById('student-course-input').value;
-            if (n.length < 5 || d.length < 6 || !s || !c) { document.getElementById('error-msg').classList.remove('hidden'); return; }
-            window.examState.sName = n; window.examState.sDni = d; window.examState.sSchool = s; window.examState.sCourse = c;
+            
+            if (n.length < 5 || d.length < 6 || !s || !c) { 
+                document.getElementById('start-screen').querySelector('#error-msg').classList.remove('hidden');
+                return; 
+            }
+            
+            window.examState.sName = n;
+            window.examState.sDni = d;
+            window.examState.sSchool = s;
+            window.examState.sCourse = c;
+            window.examState.isActive = true;
+            
+            // ALEATORIZAR PREGUNTAS AL INICIO
+            questions = shuffle(questions);
+
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             showQuestion();
         };
-
-        // Función Fisher-Yates para mezclar opciones
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
 
         function showQuestion() {
             const q = questions[window.examState.currentIdx];
@@ -255,7 +310,7 @@
             
             container.innerHTML = '';
             
-            // Mezclamos las opciones
+            // ALEATORIZAR OPCIONES PARA ESTA PREGUNTA
             const shuffledOptions = shuffle([...q.options]);
             
             shuffledOptions.forEach((opt, idx) => {
@@ -272,27 +327,38 @@
             if (!window.examState.canAnswer) return;
             window.examState.canAnswer = false;
             btn.classList.add('selected-option');
-            if (selectedText === questions[window.examState.currentIdx].correct) window.examState.score++;
+            
+            // Comparar por texto, ya que el índice cambió por el shuffle
+            if (selectedText === questions[window.examState.currentIdx].correct) {
+                window.examState.score++;
+            }
+            
             document.getElementById('feedback').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('feedback').classList.add('hidden');
                 window.examState.currentIdx++;
-                if (window.examState.currentIdx < questions.length) showQuestion();
-                else finalize();
+                if (window.examState.currentIdx < questions.length) {
+                    showQuestion();
+                } else {
+                    finalize();
+                }
             }, 600);
         }
 
         async function finalize() {
+            window.examState.isActive = false;
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
+            
             const acc = Math.round((window.examState.score / questions.length) * 100);
             document.getElementById('final-score').innerText = `${window.examState.score} / ${questions.length}`;
             document.getElementById('final-name').innerText = window.examState.sName;
+            document.getElementById('final-violations').innerText = window.examState.violations;
             document.getElementById('result-title').innerText = acc >= 70 ? "¡APROBADO!" : "EXAMEN FINALIZADO";
-            if (acc >= 70) document.getElementById('prize-section').classList.remove('hidden');
-            localStorage.setItem('examen_tics_marcelo_2026_done', 'true');
             
-            // Intentamos guardar en Firestore
+            localStorage.setItem('examen_tics_marcelo_2026_done', 'true');
             if (window.examState.user) {
                 try {
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
@@ -303,9 +369,10 @@
                         aciertos: window.examState.score,
                         total: questions.length,
                         porcentaje: acc,
+                        faltas: window.examState.violations,
                         fecha: new Date().toLocaleString()
                     });
-                } catch(e) { console.error("Error al guardar:", e); }
+                } catch(e) {}
             }
         }
 
@@ -313,51 +380,43 @@
             if (prompt("Clave Profesor:") === "marcelo2024") {
                 document.getElementById('start-screen').classList.add('hidden');
                 document.getElementById('admin-screen').classList.remove('hidden');
-                window.loadAdminData();
-            } else alert("Clave incorrecta");
+                loadAdminData();
+            }
         };
 
         window.closeAdmin = () => location.reload();
 
         window.loadAdminData = async function() {
             const body = document.getElementById('results-body');
-            body.innerHTML = '<tr><td colspan="7" class="text-center py-8 italic">Consultando base examen-tic...</td></tr>';
+            body.innerHTML = '<tr><td colspan="8" class="text-center py-8">Sincronizando con examen-tic...</td></tr>';
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
                 const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
                 const list = [];
                 snap.forEach(d => list.push(d.data()));
-                
-                // Ordenar por DNI en memoria (Regla 2)
                 list.sort((a,b) => String(a.dni).localeCompare(String(b.dni)));
-                
                 window.examState.resultsCache = list;
                 document.getElementById('admin-count').innerText = `${list.length} Alumnos Registrados`;
                 body.innerHTML = '';
-                
-                if (list.length === 0) {
-                    body.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-slate-500">No hay registros aún.</td></tr>';
-                    return;
-                }
-
                 list.forEach(r => {
                     const tr = document.createElement('tr');
                     const ap = r.aciertos >= 21;
-                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-slate-300 text-center">${r.escuela}</td><td class="text-slate-300 text-center">${r.curso}</td><td class="text-white font-semibold text-center text-center">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center">${r.aciertos}/30</td><td class="text-slate-400 text-center">${r.porcentaje}%</td><td class="text-[9px] text-slate-500 text-center">${r.fecha || '-'}</td>`;
+                    const fl = (r.faltas || 0);
+                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-slate-300 text-center">${r.escuela}</td><td class="text-slate-300 text-center">${r.curso}</td><td class="text-white font-semibold text-center">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center text-center">${r.aciertos}/30</td><td class="text-slate-400 text-center">${r.porcentaje}%</td><td class="font-bold ${fl > 0 ? 'text-red-500' : 'text-slate-500'} text-center">${fl}</td><td class="text-[9px] text-slate-500 text-center">${r.fecha || '-'}</td>`;
                     body.appendChild(tr);
                 });
-            } catch(e) { body.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-8">Error Firestore: ${e.message}</td></tr>`; }
+            } catch(e) { body.innerHTML = `<tr><td colspan="8" class="text-center text-red-500 py-8 text-center">Error: ${e.message}</td></tr>`; }
         };
 
         window.downloadCSV = function() {
             if (window.examState.resultsCache.length === 0) return;
-            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Fecha Entrega\n";
-            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.fecha}\n`);
+            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Faltas,Fecha Entrega\n";
+            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.faltas || 0},${r.fecha}\n`);
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'Resultados_TIC_Completo.csv');
+            a.setAttribute('download', 'Resultados_TIC_Aleatorio.csv');
             a.click();
         };
     </script>
