@@ -158,6 +158,7 @@
                 <div class="flex gap-2">
                     <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Actualizar</button>
                     <button onclick="window.print()" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Imprimir</button>
+                    <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Excel</button>
                 </div>
             </div>
             <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
@@ -187,16 +188,16 @@
         const appId = 'tics-eval-34-mayo-2026';
         
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); // Eliminado el segundo parámetro 'examen-tic' por compatibilidad estándar
+        const db = getFirestore(app);
         const auth = getAuth(app);
 
         // Estado del examen
         window.examState = {
             currentIdx: 0, score: 0, violations: 0, isActive: false, canAnswer: true,
-            sName: "", sDni: "", sSchool: "", sCourse: ""
+            sName: "", sDni: "", sSchool: "", sCourse: "", resultsCache: []
         };
 
-        // Banco de preguntas
+        // Banco de preguntas (Actualizado desde Excel)
         let questions = [
             { q: "En la Máquina Analítica de Babbage, ¿qué componente era el procesador?", options: ["El Molino", "El Almacén", "El Telar", "La Pascalina"], correct: "El Molino", cat: "Historia", img: "⚙️" },
             { q: "¿Cuál fue el aporte de Ada Lovelace?", options: ["Primeros algoritmos con bucles", "Válvulas de vacío", "PC electrónica", "Windows"], correct: "Primeros algoritmos con bucles", cat: "Historia", img: "👩‍💻" },
@@ -230,7 +231,6 @@
             { q: "Unidad de medida CPU:", options: ["Hertz (Hz) / GHz", "Litros", "Metros", "Kilogramos"], correct: "Hertz (Hz) / GHz", cat: "Hardware", img: "⏲️" }
         ];
 
-        // Mezclador
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -239,7 +239,6 @@
             return array;
         }
 
-        // Anti-Trampa
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && window.examState.isActive) {
                 window.examState.violations++;
@@ -261,7 +260,6 @@
             }
         };
 
-        // Registro de funciones en window para que los onclick funcionen
         window.openAdminLogin = () => {
             document.getElementById('admin-login-overlay').style.display = 'flex';
             document.getElementById('admin-pass-input').focus();
@@ -285,22 +283,36 @@
 
         window.loadAdminData = async function() {
             const body = document.getElementById('results-body');
-            body.innerHTML = '<tr><td colspan="7" class="py-8">Sincronizando 3° 4°...</td></tr>';
+            body.innerHTML = '<tr><td colspan="7" class="py-8">Sincronizando...</td></tr>';
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
-                const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'resultados');
-                const snap = await getDocs(resultsRef);
+                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
                 const list = [];
                 snap.forEach(d => list.push(d.data()));
                 list.sort((a,b) => String(a.dni).localeCompare(String(b.dni)));
+                window.examState.resultsCache = list;
                 document.getElementById('admin-count').innerText = `${list.length} Alumnos Registrados`;
                 body.innerHTML = '';
                 list.forEach(r => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td class="font-bold text-blue-400">${r.dni}</td><td class="text-white text-left">${r.nombre}</td><td class="${r.aciertos>=21?'text-emerald-400':'text-red-400'} font-bold">${r.aciertos}/30</td><td>${r.porcentaje}%</td><td>${r.faltas || 0}</td><td>${r.escuela}</td><td class="text-[9px] text-slate-500">${r.fecha || '-'}</td>`;
+                    const ap = r.aciertos >= 21;
+                    const fl = (r.faltas || 0);
+                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-white text-left font-semibold">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center">${r.aciertos}/30</td><td class="text-slate-400 text-center">${r.porcentaje}%</td><td class="font-bold ${fl > 0 ? 'text-red-500' : 'text-slate-500'} text-center">${fl}</td><td class="text-center">${r.escuela}</td><td class="text-[9px] text-slate-500 text-center">${r.fecha || '-'}</td>`;
                     body.appendChild(tr);
                 });
-            } catch(e) { body.innerHTML = '<tr><td colspan="7" class="text-red-500">Error al cargar datos</td></tr>'; }
+            } catch(e) { body.innerHTML = '<tr><td colspan="7" class="text-red-500">Error de conexión</td></tr>'; }
+        };
+
+        window.downloadCSV = function() {
+            if (window.examState.resultsCache.length === 0) return;
+            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Faltas,Fecha Entrega\n";
+            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.faltas || 0},${r.fecha}\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Resultados_TIC.csv');
+            a.click();
         };
 
         window.closeAdmin = () => location.reload();
@@ -369,8 +381,7 @@
             localStorage.setItem('examen_tics_34_final_mayo', 'true');
             if (auth.currentUser) {
                 try {
-                    const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'resultados');
-                    await addDoc(resultsRef, {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
                         nombre: window.examState.sName, dni: window.examState.sDni, escuela: window.examState.sSchool, curso: window.examState.sCourse, aciertos: window.examState.score, total: 30, porcentaje: acc, faltas: window.examState.violations, fecha: new Date().toLocaleString()
                     });
                 } catch(e) {}
@@ -378,10 +389,7 @@
         }
 
         const initAuth = async () => {
-            try {
-                // En GitHub no hay __initial_auth_token, siempre usaremos anónimo para simplificar
-                await signInAnonymously(auth);
-            } catch (e) { console.error("Error Auth:", e); }
+            try { await signInAnonymously(auth); } catch (e) {}
         };
         initAuth();
 
