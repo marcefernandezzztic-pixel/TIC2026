@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Entrar al Examen</button>
+        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl shadow-blue-600/20 transition-all uppercase tracking-widest text-sm">Entrar al Examen</button>
         <button onclick="window.openAdminLogin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
 
@@ -174,12 +174,20 @@
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Inicialización segura de constantes
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "fallback" };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tics-eval-34-mayo-2026';
+        // CONFIGURACIÓN DE FIREBASE (Hardcoded para GitHub)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAI-r_ZLjbz2jnVgfI4-HHBnOFDEvOOCfw",
+            authDomain: "club-cc6a8.firebaseapp.com",
+            projectId: "club-cc6a8",
+            storageBucket: "club-cc6a8.firebasestorage.app",
+            messagingSenderId: "754977085906",
+            appId: "1:754977085906:web:c070776aac822175c2100b"
+        };
+        
+        const appId = 'tics-eval-34-mayo-2026';
         
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app, 'examen-tic');
+        const db = getFirestore(app); // Eliminado el segundo parámetro 'examen-tic' por compatibilidad estándar
         const auth = getAuth(app);
 
         // Estado del examen
@@ -188,7 +196,7 @@
             sName: "", sDni: "", sSchool: "", sCourse: ""
         };
 
-        // Preguntas cargadas desde el Excel
+        // Banco de preguntas
         let questions = [
             { q: "En la Máquina Analítica de Babbage, ¿qué componente era el procesador?", options: ["El Molino", "El Almacén", "El Telar", "La Pascalina"], correct: "El Molino", cat: "Historia", img: "⚙️" },
             { q: "¿Cuál fue el aporte de Ada Lovelace?", options: ["Primeros algoritmos con bucles", "Válvulas de vacío", "PC electrónica", "Windows"], correct: "Primeros algoritmos con bucles", cat: "Historia", img: "👩‍💻" },
@@ -222,7 +230,7 @@
             { q: "Unidad de medida CPU:", options: ["Hertz (Hz) / GHz", "Litros", "Metros", "Kilogramos"], correct: "Hertz (Hz) / GHz", cat: "Hardware", img: "⏲️" }
         ];
 
-        // Mezclador Fisher-Yates
+        // Mezclador
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -231,7 +239,7 @@
             return array;
         }
 
-        // Sistema Anti-Trampa
+        // Anti-Trampa
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && window.examState.isActive) {
                 window.examState.violations++;
@@ -253,7 +261,7 @@
             }
         };
 
-        // Panel Docente
+        // Registro de funciones en window para que los onclick funcionen
         window.openAdminLogin = () => {
             document.getElementById('admin-login-overlay').style.display = 'flex';
             document.getElementById('admin-pass-input').focus();
@@ -280,7 +288,8 @@
             body.innerHTML = '<tr><td colspan="7" class="py-8">Sincronizando 3° 4°...</td></tr>';
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
-                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
+                const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'resultados');
+                const snap = await getDocs(resultsRef);
                 const list = [];
                 snap.forEach(d => list.push(d.data()));
                 list.sort((a,b) => String(a.dni).localeCompare(String(b.dni)));
@@ -296,7 +305,6 @@
 
         window.closeAdmin = () => location.reload();
 
-        // Lógica del Examen
         window.checkDataAndStart = function() {
             const n = document.getElementById('student-name-input').value.trim();
             const d = document.getElementById('student-dni-input').value.trim();
@@ -361,22 +369,19 @@
             localStorage.setItem('examen_tics_34_final_mayo', 'true');
             if (auth.currentUser) {
                 try {
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
+                    const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'resultados');
+                    await addDoc(resultsRef, {
                         nombre: window.examState.sName, dni: window.examState.sDni, escuela: window.examState.sSchool, curso: window.examState.sCourse, aciertos: window.examState.score, total: 30, porcentaje: acc, faltas: window.examState.violations, fecha: new Date().toLocaleString()
                     });
                 } catch(e) {}
             }
         }
 
-        // Inicializar Auth
         const initAuth = async () => {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (e) {}
+                // En GitHub no hay __initial_auth_token, siempre usaremos anónimo para simplificar
+                await signInAnonymously(auth);
+            } catch (e) { console.error("Error Auth:", e); }
         };
         initAuth();
 
@@ -386,7 +391,6 @@
                 document.getElementById('already-done-screen').classList.remove('hidden');
             }
         });
-
     </script>
 </body>
 </html>
