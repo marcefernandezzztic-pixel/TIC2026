@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafiando TICs: 3ro 4ta - Evaluación Final</title>
+    <title>Desafiando TICs: Evaluación Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -29,39 +29,57 @@
             text-align: center;
         }
 
+        .admin-table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 900px; table-layout: fixed; }
+        th, td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        th { background: rgba(15, 23, 42, 0.8); color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+        
+        /* Alineación corregida según la imagen */
+        .col-center { text-align: center; }
+        .col-left { text-align: left; }
+
+        .w-dni { width: 100px; }
+        .w-esc { width: 70px; }
+        .w-cur { width: 70px; }
+        .w-alu { width: 250px; }
+        .w-not { width: 80px; }
+        .w-por { width: 70px; }
+        .w-fal { width: 80px; }
+        .w-hor { width: 130px; }
+
         @media print {
             body { background: white !important; color: black !important; padding: 0; }
             #admin-screen { display: block !important; position: static !important; width: 100% !important; background: white !important; height: auto !important; }
             .glass { background: white !important; border: 1px solid #ddd !important; color: black !important; backdrop-filter: none !important; box-shadow: none !important; border-radius: 0 !important; }
             .no-print, button, #current-category, #progress-text, .w-full.bg-slate-800 { display: none !important; }
-            table { width: 100% !important; border: 1px solid #000 !important; color: black !important; font-size: 9pt; }
-            th, td { border: 1px solid #000 !important; color: black !important; padding: 6px; }
-            h2, p, span, h1 { color: black !important; }
+            table { width: 100% !important; border: 1px solid #000 !important; color: black !important; font-size: 8pt; }
+            th, td { border: 1px solid #000 !important; color: black !important; padding: 4px; }
+            .w-alu { width: auto; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Modal de Acceso Docente -->
+    <!-- Pantalla Anti-Trampa -->
+    <div id="anti-cheat-overlay">
+        <div class="text-6xl mb-6">⚠️</div>
+        <h2 class="text-3xl font-bold text-red-500 mb-4 text-center">ALERTA DE SEGURIDAD</h2>
+        <p class="text-slate-300 max-w-md mb-8 text-center leading-relaxed">Has salido de la ventana de evaluación o has intentado cambiar de pestaña. Esta acción se registra como falta técnica. Vuelve para continuar.</p>
+        <button onclick="window.resumeExam()" class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-all uppercase tracking-widest shadow-xl shadow-red-900/40">Reanudar Examen</button>
+    </div>
+
+    <!-- Modal Acceso Docente -->
     <div id="admin-login-overlay" class="fade-in">
         <div class="glass p-8 rounded-[40px] max-w-sm w-full">
-            <h2 class="text-2xl font-bold mb-6 text-white uppercase tracking-widest">Acceso Docente</h2>
+            <h2 class="text-2xl font-bold mb-6 text-white uppercase tracking-widest text-center">Acceso Docente</h2>
             <input type="password" id="admin-pass-input" placeholder="Clave de Profesor" 
                    class="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white mb-4 focus:outline-none focus:border-blue-500 text-center">
             <div class="flex gap-2">
                 <button onclick="window.closeAdminLogin()" class="flex-1 py-3 bg-slate-800 text-slate-400 font-bold rounded-xl uppercase text-xs">Cancelar</button>
                 <button onclick="window.submitAdminLogin()" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl uppercase text-xs">Entrar</button>
             </div>
-            <p id="admin-login-error" class="text-red-500 text-[10px] mt-4 hidden uppercase font-bold">Clave incorrecta</p>
+            <p id="admin-login-error" class="text-red-500 text-[10px] mt-4 hidden uppercase font-bold text-center">Clave incorrecta</p>
         </div>
-    </div>
-
-    <!-- Pantalla Anti-Trampa -->
-    <div id="anti-cheat-overlay">
-        <div class="text-6xl mb-6">⚠️</div>
-        <h2 class="text-3xl font-bold text-red-500 mb-4">ALERTA DE SEGURIDAD</h2>
-        <p class="text-slate-300 max-w-md mb-8">Has salido de la ventana de evaluación. Esta acción se registra como falta técnica. Vuelve para continuar.</p>
-        <button onclick="window.resumeExam()" class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-all uppercase tracking-widest">Reanudar</button>
     </div>
 
     <!-- Pantalla de Bloqueo -->
@@ -69,7 +87,7 @@
         <div class="glass p-8 rounded-[40px] mb-8 border-red-500/30">
             <div class="text-6xl mb-4">🚫</div>
             <h2 class="text-2xl font-bold mb-2 text-white">Intento Agotado</h2>
-            <p class="text-slate-400 mb-6 leading-relaxed">Solo se permite un único intento. Tus resultados ya han sido enviados al Profesor Fernández.</p>
+            <p class="text-slate-400 mb-6 leading-relaxed text-center">Solo se permite un único intento por evaluación. Tus resultados ya han sido procesados y enviados al sistema.</p>
         </div>
         <button onclick="window.openAdminLogin()" class="text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
     </div>
@@ -77,12 +95,11 @@
     <!-- Pantalla de Inicio -->
     <div id="start-screen" class="max-w-md w-full text-center fade-in">
         <div class="mb-6">
-            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2 text-center">Prof. Marcelo Fernández</p>
+            <p class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2">Prof. Marcelo Fernández</p>
             <h1 class="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Desafiando TICs</h1>
             <div class="inline-block px-4 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-400 font-bold tracking-widest uppercase mb-4">
-                3ro 4ta • 4 de Mayo de 2026
+                3ro 4ta • Evaluación Final
             </div>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic text-center">Evaluación Final • 30 Preguntas Aleatorias</p>
         </div>
         
         <div class="glass p-6 rounded-3xl mb-6 shadow-2xl text-left border-white/5">
@@ -92,20 +109,20 @@
                     <input type="text" id="student-name-input" placeholder="Ej: Juan Pérez" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Sin puntos)</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">DNI (Solo números)</label>
                     <input type="number" id="student-dni-input" placeholder="Ej: 45123456" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block">Escuela</label>
-                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                        <select id="student-school-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm appearance-none bg-no-repeat bg-right" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-position: right 0.75rem center; background-size: 1rem;">
                             <option value="4027">4027</option>
                             <option value="4016">4016</option>
                         </select>
                     </div>
                     <div>
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-2 block">Curso</label>
-                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+                        <select id="student-course-input" class="w-full mt-1 p-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm appearance-none bg-no-repeat bg-right" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-position: right 0.75rem center; background-size: 1rem;">
                             <option value="3°4°" selected>3° 4°</option>
                             <option value="3°1°">3° 1°</option>
                         </select>
@@ -114,25 +131,25 @@
             </div>
         </div>
 
-        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl shadow-blue-600/20 transition-all uppercase tracking-widest text-sm">Entrar al Examen</button>
-        <button onclick="window.openAdminLogin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print">Acceso Docente</button>
+        <button onclick="window.checkDataAndStart()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl transition-all uppercase tracking-widest text-sm">Iniciar Evaluación</button>
+        <button onclick="window.openAdminLogin()" class="mt-8 text-[10px] text-slate-600 uppercase font-bold tracking-widest hover:text-blue-500 transition-colors block w-full no-print text-center">Acceso Docente</button>
     </div>
 
-    <!-- Juego -->
+    <!-- Pantalla de Juego -->
     <div id="game-screen" class="hidden max-w-md w-full fade-in">
         <div class="flex items-center justify-between mb-4 px-2">
             <span class="text-[10px] font-bold text-blue-400 tracking-widest uppercase" id="current-category">Evaluación</span>
             <span class="text-[10px] font-bold text-slate-500" id="progress-text">1 / 30</span>
         </div>
         <div class="w-full bg-slate-800 h-1.5 rounded-full mb-8 overflow-hidden"><div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div></div>
-        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[160px] text-center border-white/10 shadow-2xl">
+        <div class="glass p-6 rounded-3xl mb-6 flex flex-col justify-center min-h-[180px] text-center border-white/10 shadow-2xl">
             <div id="question-image" class="text-4xl mb-4 text-center">💻</div>
             <h2 id="question-text" class="text-lg font-semibold text-white px-2 text-center leading-tight"></h2>
         </div>
         <div id="options-container" class="space-y-3"></div>
     </div>
 
-    <!-- Resultados -->
+    <!-- Pantalla de Resultados -->
     <div id="result-screen" class="hidden max-w-md w-full text-center fade-in">
         <div class="glass p-8 rounded-[40px] mb-8 shadow-2xl border-white/5">
             <h2 id="result-title" class="text-3xl font-bold mb-2 uppercase text-white"></h2>
@@ -147,13 +164,16 @@
 
     <!-- Panel Docente -->
     <div id="admin-screen" class="hidden w-full max-w-6xl fade-in flex flex-col h-screen max-h-[92vh]">
-        <div class="flex justify-between items-center mb-6 px-4 no-print text-center">
-            <div class="text-left"><h2 class="text-2xl font-bold text-white text-left">Reporte Final 3° 4°</h2><p class="text-xs text-slate-400 uppercase font-bold tracking-widest text-left">Profesor Marcelo Fernández</p></div>
-            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors text-center">✖</button>
+        <div class="flex justify-between items-center mb-6 px-4 no-print">
+            <div class="text-left">
+                <h2 class="text-2xl font-bold text-white">Reporte Final 3° 4°</h2>
+                <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Profesor Marcelo Fernández</p>
+            </div>
+            <button onclick="window.closeAdmin()" class="p-3 bg-slate-800 rounded-2xl text-white hover:bg-slate-700 transition-colors">✖</button>
         </div>
 
-        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5 text-center">
-            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print text-center">
+        <div class="glass rounded-[40px] flex-1 flex flex-col overflow-hidden shadow-2xl border-white/5">
+            <div class="p-5 bg-slate-900/50 flex flex-wrap gap-4 justify-between items-center border-b border-white/5 no-print">
                 <span class="text-xs font-bold text-slate-400 bg-slate-800 px-4 py-2 rounded-full border border-white/5" id="admin-count">Sincronizando...</span>
                 <div class="flex gap-2">
                     <button onclick="window.loadAdminData()" class="text-[10px] bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Actualizar</button>
@@ -161,9 +181,20 @@
                     <button onclick="window.downloadCSV()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all">Excel</button>
                 </div>
             </div>
-            <div class="admin-table-container flex-1 overflow-y-auto p-4 text-center">
-                <table id="results-table" class="text-center">
-                    <thead><tr><th>DNI</th><th>Alumno</th><th>Nota</th><th>%</th><th>Faltas</th><th>Escuela</th><th>Hora</th></tr></thead>
+            <div class="admin-table-container flex-1 overflow-y-auto p-4">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th class="w-dni col-center">DNI</th>
+                            <th class="w-esc col-center">Esc.</th>
+                            <th class="w-cur col-center">Curso</th>
+                            <th class="w-alu col-left">Alumno</th>
+                            <th class="w-not col-center">Nota</th>
+                            <th class="w-por col-center">%</th>
+                            <th class="w-fal col-center">Faltas</th>
+                            <th class="w-hor col-center">Hora</th>
+                        </tr>
+                    </thead>
                     <tbody id="results-body"></tbody>
                 </table>
             </div>
@@ -175,7 +206,7 @@
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // CONFIGURACIÓN DE FIREBASE (Hardcoded para GitHub)
+        // CONFIGURACIÓN DE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAI-r_ZLjbz2jnVgfI4-HHBnOFDEvOOCfw",
             authDomain: "club-cc6a8.firebaseapp.com",
@@ -186,18 +217,18 @@
         };
         
         const appId = 'tics-eval-34-mayo-2026';
-        
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        
+        // CORRECCIÓN: Se especifica la base de datos 'examen-tic' si existe, de lo contrario usa la default
+        // Nota: Si usas una base de datos con nombre diferente a (default), cámbiala aquí
+        const db = getFirestore(app, 'examen-tic'); 
         const auth = getAuth(app);
 
-        // Estado del examen
         window.examState = {
             currentIdx: 0, score: 0, violations: 0, isActive: false, canAnswer: true,
             sName: "", sDni: "", sSchool: "", sCourse: "", resultsCache: []
         };
 
-        // Banco de preguntas (Actualizado desde Excel)
         let questions = [
             { q: "En la Máquina Analítica de Babbage, ¿qué componente era el procesador?", options: ["El Molino", "El Almacén", "El Telar", "La Pascalina"], correct: "El Molino", cat: "Historia", img: "⚙️" },
             { q: "¿Cuál fue el aporte de Ada Lovelace?", options: ["Primeros algoritmos con bucles", "Válvulas de vacío", "PC electrónica", "Windows"], correct: "Primeros algoritmos con bucles", cat: "Historia", img: "👩‍💻" },
@@ -239,27 +270,6 @@
             return array;
         }
 
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && window.examState.isActive) {
-                window.examState.violations++;
-                document.getElementById('anti-cheat-overlay').style.display = 'flex';
-            }
-        });
-
-        window.addEventListener('blur', () => {
-            if (window.examState.isActive) {
-                window.examState.violations++;
-                document.getElementById('anti-cheat-overlay').style.display = 'flex';
-            }
-        });
-
-        window.resumeExam = () => {
-            document.getElementById('anti-cheat-overlay').style.display = 'none';
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            }
-        };
-
         window.openAdminLogin = () => {
             document.getElementById('admin-login-overlay').style.display = 'flex';
             document.getElementById('admin-pass-input').focus();
@@ -283,13 +293,20 @@
 
         window.loadAdminData = async function() {
             const body = document.getElementById('results-body');
-            body.innerHTML = '<tr><td colspan="7" class="py-8">Sincronizando...</td></tr>';
+            body.innerHTML = '<tr><td colspan="8" class="text-center py-8">Sincronizando registros...</td></tr>';
             try {
-                if (!auth.currentUser) await signInAnonymously(auth);
+                // CORRECCIÓN: Esperar a que la autenticación se complete
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+                
                 const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
                 const list = [];
                 snap.forEach(d => list.push(d.data()));
-                list.sort((a,b) => String(a.dni).localeCompare(String(b.dni)));
+                
+                // Ordenamiento numérico
+                list.sort((a,b) => Number(a.dni) - Number(b.dni));
+                
                 window.examState.resultsCache = list;
                 document.getElementById('admin-count').innerText = `${list.length} Alumnos Registrados`;
                 body.innerHTML = '';
@@ -297,21 +314,34 @@
                     const tr = document.createElement('tr');
                     const ap = r.aciertos >= 21;
                     const fl = (r.faltas || 0);
-                    tr.innerHTML = `<td class="font-bold text-blue-400 text-center">${r.dni}</td><td class="text-white text-left font-semibold">${r.nombre}</td><td class="${ap?'text-emerald-400':'text-red-400'} font-bold text-center">${r.aciertos}/30</td><td class="text-slate-400 text-center">${r.porcentaje}%</td><td class="font-bold ${fl > 0 ? 'text-red-500' : 'text-slate-500'} text-center">${fl}</td><td class="text-center">${r.escuela}</td><td class="text-[9px] text-slate-500 text-center">${r.fecha || '-'}</td>`;
+                    tr.innerHTML = `
+                        <td class="w-dni col-center font-bold text-blue-400">${r.dni}</td>
+                        <td class="w-esc col-center text-slate-300">${r.escuela}</td>
+                        <td class="w-cur col-center text-slate-300">${r.curso}</td>
+                        <td class="w-alu col-left text-white font-semibold">${r.nombre}</td>
+                        <td class="w-not col-center ${ap?'text-emerald-400':'text-red-400'} font-bold">${r.aciertos}/30</td>
+                        <td class="w-por col-center text-slate-400">${r.porcentaje}%</td>
+                        <td class="w-fal col-center font-bold ${fl > 0 ? 'text-red-500' : 'text-slate-500'}">${fl}</td>
+                        <td class="w-hor col-center text-[9px] text-slate-500">${r.fecha || '-'}</td>`;
                     body.appendChild(tr);
                 });
-            } catch(e) { body.innerHTML = '<tr><td colspan="7" class="text-red-500">Error de conexión</td></tr>'; }
+            } catch(e) { 
+                body.innerHTML = `<tr><td colspan="8" class="text-center text-red-500 py-8">Error de Conexión: ${e.message}</td></tr>`; 
+                console.error("Firebase Error:", e);
+            }
         };
 
         window.downloadCSV = function() {
             if (window.examState.resultsCache.length === 0) return;
-            let csv = "DNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Faltas,Fecha Entrega\n";
-            window.examState.resultsCache.forEach(r => csv += `${r.dni},${r.escuela},${r.curso},${r.nombre},${r.aciertos},${r.porcentaje}%,${r.faltas || 0},${r.fecha}\n`);
+            let csv = "\uFEFFDNI,Escuela,Curso,Alumno,Aciertos,Porcentaje,Faltas,Fecha Entrega\n";
+            window.examState.resultsCache.forEach(r => {
+                csv += `"${r.dni}","${r.escuela}","${r.curso}","${r.nombre}","${r.aciertos}","${r.porcentaje}%","${r.faltas || 0}","${r.fecha}"\n`;
+            });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'Resultados_TIC.csv');
+            a.setAttribute('download', `Reporte_TIC_34_${new Date().toLocaleDateString()}.csv`);
             a.click();
         };
 
@@ -384,12 +414,12 @@
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
                         nombre: window.examState.sName, dni: window.examState.sDni, escuela: window.examState.sSchool, curso: window.examState.sCourse, aciertos: window.examState.score, total: 30, porcentaje: acc, faltas: window.examState.violations, fecha: new Date().toLocaleString()
                     });
-                } catch(e) {}
+                } catch(e) { console.error("Error saving:", e); }
             }
         }
 
         const initAuth = async () => {
-            try { await signInAnonymously(auth); } catch (e) {}
+            try { await signInAnonymously(auth); } catch (e) { console.error("Auth Error:", e); }
         };
         initAuth();
 
@@ -399,6 +429,27 @@
                 document.getElementById('already-done-screen').classList.remove('hidden');
             }
         });
+
+        // Anti-Trampa
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && window.examState.isActive) {
+                window.examState.violations++;
+                document.getElementById('anti-cheat-overlay').style.display = 'flex';
+            }
+        });
+        window.addEventListener('blur', () => {
+            if (window.examState.isActive) {
+                window.examState.violations++;
+                document.getElementById('anti-cheat-overlay').style.display = 'flex';
+            }
+        });
+        window.resumeExam = () => {
+            document.getElementById('anti-cheat-overlay').style.display = 'none';
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        };
+
     </script>
 </body>
 </html>
